@@ -6,9 +6,9 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 
-public class CheckerHBoxCellEventHandler implements EventHandler<MouseEvent> {
+public class CheckerPaneCellEventHandler implements EventHandler<MouseEvent> {
 
     @Override
     public void handle(MouseEvent mouseEvent) {
@@ -16,7 +16,7 @@ public class CheckerHBoxCellEventHandler implements EventHandler<MouseEvent> {
 
         CheckerBoardController checkerBoardController = CheckerBoardController.getInstance();
 
-        if (mouseEvent.getTarget() instanceof HBox) {
+        if (mouseEvent.getTarget() instanceof Pane) {
             newX = GridPane.getColumnIndex((Node) mouseEvent.getTarget());
             newY = GridPane.getRowIndex((Node) mouseEvent.getTarget());
         }

@@ -1,9 +1,9 @@
 package com.dangnha.checkers.constants;
 
 public class BoardConstant {
-    public static final int N = 4;
-    public static final int CELL_WIDTH = 50;
-    public static final int CELL_HEIGHT = 50;
+    public static final int N = 8;
+    public static final int CELL_WIDTH = 60;
+    public static final int CELL_HEIGHT = 60;
     public static final int BOARD_WIDTH = CELL_WIDTH * N;
     public static final int BOARD_HEIGHT = CELL_HEIGHT * N;
     public static final int CHESS_NUMBERS_PER_SIDE = (N/2 - 1) * (N/2);

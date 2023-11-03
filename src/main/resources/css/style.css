@@ -11,6 +11,10 @@
     -fx-background-color: #fefefe;
 }
 
+.highlight-cell {
+    -fx-background-color: #b6ffd0;
+}
+
 .checker-button {
     -fx-background-color: #a54131;
 }

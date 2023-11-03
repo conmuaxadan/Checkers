@@ -1,21 +1,20 @@
 package com.dangnha.checkers.controller;
 
-import com.dangnha.checkers.model.Checker;
 import com.dangnha.checkers.model.CheckerBoard;
 import com.dangnha.checkers.model.Position;
-import com.dangnha.checkers.view.CheckBoardView;
+import com.dangnha.checkers.view.CheckerBoardView;
 
-import java.util.EventListener;
+import java.util.List;
 
 public class CheckerBoardController {
     private CheckerBoard checkerBoard;
     private Position currentCheckerPos;
     private Position newCheckerPos;
-    private final CheckBoardView checkBoardView;
+    private final CheckerBoardView checkerBoardView;
     private static CheckerBoardController instance;
 
     private CheckerBoardController() {
-        checkBoardView = CheckBoardView.getInstance();
+        checkerBoardView = CheckerBoardView.getInstance();
     }
 
     public static CheckerBoardController getInstance() {
@@ -26,13 +25,24 @@ public class CheckerBoardController {
 
     public void setCheckerBoard(CheckerBoard checkerBoard) {
         this.checkerBoard = checkerBoard;
-        checkBoardView.refreshBoardView(checkerBoard);
+        checkerBoardView.refreshBoardView(checkerBoard);
     }
 
     public void placeChecker(Position currentCheckerPos, Position newCheckerPos) {
-        checkerBoard.placeChessman(currentCheckerPos.getX(), currentCheckerPos.getY(), newCheckerPos.getX(), newCheckerPos.getY());
+        checkerBoard.placeChecker(currentCheckerPos.getX(), currentCheckerPos.getY(), newCheckerPos.getX(), newCheckerPos.getY());
+        checkerBoard.makeKingChecker(newCheckerPos.getX(), newCheckerPos.getY());
 
-        checkBoardView.refreshBoardView(checkerBoard);
+        checkerBoardView.refreshBoardView(checkerBoard);
+    }
+
+    public void displayAvailableMoves(Position currentCheckerPos) {
+        List<Position> availableMoves = checkerBoard.findCheckerByPosition(currentCheckerPos.getX(),
+                currentCheckerPos.getY()).getValidPositions(checkerBoard);
+
+        checkerBoardView.refreshBoardView(checkerBoard);
+        for (Position availableMove : availableMoves) {
+            checkerBoardView.highlightCell(availableMove.getX(), availableMove.getY());
+        }
     }
 
     public Position getCurrentCheckerPos() {

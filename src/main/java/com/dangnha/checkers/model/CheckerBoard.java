@@ -111,7 +111,7 @@ public class CheckerBoard {
         return boardStates;
     }
 
-    public void placeChessman(int currentX, int currentY, int newX, int newY) {
+    public void placeChecker(int currentX, int currentY, int newX, int newY) {
         if (currentX != Integer.MIN_VALUE && currentY != Integer.MIN_VALUE && newX != Integer.MIN_VALUE && newY != Integer.MIN_VALUE) {
 
             Position newPos = new Position(newX, newY);
@@ -122,9 +122,9 @@ public class CheckerBoard {
                 // check if new pos is an attack pos
                 if (currentChessman.isAttackPos(newPos, this)) {
                     int opponentX = Math.abs(currentX + newX) / 2;
-                    int oppenentY = Math.abs(currentY + newY) / 2;
+                    int opponentY = Math.abs(currentY + newY) / 2;
 
-                    Checker opponentChecker = findCheckerByPosition(opponentX, oppenentY);
+                    Checker opponentChecker = findCheckerByPosition(opponentX, opponentY);
                     System.out.println(opponentChecker);
                     if (opponentChecker != null)
                         opponentChecker.setAttacken(true);
@@ -136,6 +136,15 @@ public class CheckerBoard {
             }
             refreshBoard();
         }
+    }
+
+    public void makeKingChecker(int x, int y) {
+        Checker checker = findCheckerByPosition(x, y);
+        if (checker.getCheckerType().equalsIgnoreCase(CheckerConstant.CHESS_TYPE_WHITE) && checker.getPosition().getY() == BoardConstant.N - 1)
+            checker.setCheckerType(CheckerConstant.CHESS_TYPE_KING_WHITE);
+        else if (checker.getCheckerType().equalsIgnoreCase(CheckerConstant.CHESS_TYPE_BLACK) && checker.getPosition().getY() == 0)
+            checker.setCheckerType(CheckerConstant.CHESS_TYPE_KING_BLACK);
+        refreshBoard();
     }
 
     public void setBoardStates(String[][] boardStates) {
@@ -173,9 +182,9 @@ public class CheckerBoard {
 //        board.placeChessman(3, 4, 4, 3);
 //        board.placeChessman(1, 2, 3, 4);
 //        board.placeChessman(4, 5, 2, 3);
-        board.placeChessman(2, 3, 3, 2);
-        board.placeChessman(3, 2, 1, 2);
-        board.placeChessman(1, 0, 0, 1);
+        board.placeChecker(2, 3, 3, 2);
+        board.placeChecker(3, 2, 1, 2);
+        board.placeChecker(1, 0, 0, 1);
 
 
         System.out.println(board);

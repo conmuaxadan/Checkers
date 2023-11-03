@@ -15,11 +15,14 @@ public class CheckerButtonEventHandler implements EventHandler<MouseEvent> {
         int currentX = Integer.MIN_VALUE, currentY = Integer.MIN_VALUE;
 
         CheckerBoardController checkerBoardController = CheckerBoardController.getInstance();
-
+        System.out.println(mouseEvent.getTarget());
         if (mouseEvent.getTarget() instanceof Button) {
-            currentX = GridPane.getColumnIndex((Node) mouseEvent.getTarget());
-            currentY = GridPane.getRowIndex((Node) mouseEvent.getTarget());
+
+            currentX = GridPane.getColumnIndex(((Button) mouseEvent.getTarget()).getParent());
+            currentY = GridPane.getRowIndex(((Button) mouseEvent.getTarget()).getParent());
         }
+
+        checkerBoardController.displayAvailableMoves(new Position(currentX, currentY));
 
         checkerBoardController.setCurrentCheckerPos(new Position(currentX, currentY));
 
