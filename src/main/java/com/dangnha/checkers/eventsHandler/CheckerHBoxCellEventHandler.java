@@ -1,5 +1,6 @@
-package com.dangnha.checkers.controller;
+package com.dangnha.checkers.eventsHandler;
 
+import com.dangnha.checkers.controller.CheckerBoardController;
 import com.dangnha.checkers.model.Position;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -22,8 +23,16 @@ public class CheckerHBoxCellEventHandler implements EventHandler<MouseEvent> {
 
         checkerBoardController.setNewCheckerPos(new Position(newX, newY));
 
+        System.out.println(checkerBoardController.getCurrentCheckerPos() + "\t" + checkerBoardController.getNewCheckerPos());
+        // place checker
+        if (checkerBoardController.getCurrentCheckerPos() != null) {
+            checkerBoardController.placeChecker(checkerBoardController.getCurrentCheckerPos(), checkerBoardController.getNewCheckerPos());
 
-        System.out.println("haha");
+            checkerBoardController.setCurrentCheckerPos(null);
+            checkerBoardController.setNewCheckerPos(null);
+
+        }
+
     }
 
 }

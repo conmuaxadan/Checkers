@@ -1,8 +1,7 @@
-package com.checkers.model;
+package com.dangnha.checkers.model;
 
-import com.checkers.constants.*;
+import com.dangnha.checkers.constants.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Checker {
@@ -29,6 +28,14 @@ public abstract class Checker {
         return false;
     }
 
+    public boolean isAttackPos(Position newPos, CheckerBoard board) {
+        for (Position pos: this.getValidPositions(board)
+        ) {
+            if (pos.getX() == newPos.getX() && pos.getY() == newPos.getY() && pos.isAttackPos())
+                return true;
+        }
+        return false;
+    }
     public abstract List<Position> getValidPositions(CheckerBoard board);
 
     public String getCheckerType() {

@@ -1,6 +1,6 @@
-package com.checkers.model;
+package com.dangnha.checkers.model;
 
-import com.checkers.constants.CheckerConstant;
+import com.dangnha.checkers.constants.CheckerConstant;
 
 import java.util.List;
 

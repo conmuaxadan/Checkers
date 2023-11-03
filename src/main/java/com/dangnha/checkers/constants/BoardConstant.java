@@ -1,7 +1,7 @@
-package com.checkers.constants;
+package com.dangnha.checkers.constants;
 
 public class BoardConstant {
-    public static final int N = 6;
+    public static final int N = 4;
     public static final int CELL_WIDTH = 50;
     public static final int CELL_HEIGHT = 50;
     public static final int BOARD_WIDTH = CELL_WIDTH * N;

@@ -1,9 +1,8 @@
-package com.checkers;
+package com.dangnha.checkers;
 
-import com.checkers.controller.GameController;
-import com.checkers.view.CheckBoardView;
+import com.dangnha.checkers.controller.GameController;
+import com.dangnha.checkers.view.CheckBoardView;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -12,9 +11,13 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+        String cssFile = this.getClass().getResource("/css/style.css").toExternalForm();
+
         GameController gameController = GameController.getInstance();
         gameController.initGame();
-        Scene scene = new Scene(CheckBoardView.getInstance(), 500, 500);
+        Scene scene = new Scene(CheckBoardView.getInstance(), 525, 475);
+        stage.setResizable(false);
+        scene.getStylesheets().add(cssFile);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();

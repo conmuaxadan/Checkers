@@ -1,0 +1,28 @@
+.checker-board {
+    -fx-border-color: #211519;
+    -fx-border-width: 2px;
+}
+
+.dark-cell {
+    -fx-background-color: #a54131;
+}
+
+.light-cell {
+    -fx-background-color: #fefefe;
+}
+
+.checker-button {
+    -fx-background-color: #a54131;
+}
+
+.checker-icon {
+    -fx-max-width: 50px;
+    -fx-max-height: 50px;
+}
+
+.checker-button:pressed {
+    /*-fx-border-color: #300e93;*/
+    -fx-background-color: #a691e3;
+
+
+}

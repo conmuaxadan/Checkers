@@ -1,7 +1,7 @@
-package com.checkers.controller;
+package com.dangnha.checkers.controller;
 
-import com.checkers.constants.BoardConstant;
-import com.checkers.model.CheckerBoard;
+import com.dangnha.checkers.constants.BoardConstant;
+import com.dangnha.checkers.model.CheckerBoard;
 
 public class GameController {
     private CheckerBoardController checkerBoardController;

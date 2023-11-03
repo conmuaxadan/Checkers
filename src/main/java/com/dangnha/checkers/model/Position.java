@@ -1,12 +1,20 @@
-package com.checkers.model;
+package com.dangnha.checkers.model;
 
 public class Position {
     private int x;
     private int y;
+    private boolean attackPos;
 
     public Position(int x, int y) {
         this.x = x;
         this.y = y;
+        attackPos = false;
+    }
+
+    public Position(int x, int y, boolean attackPos) {
+        this.x = x;
+        this.y = y;
+        this.attackPos = attackPos;
     }
 
     public int getX() {
@@ -25,8 +33,16 @@ public class Position {
         this.y = y;
     }
 
+    public boolean isAttackPos() {
+        return attackPos;
+    }
+
+    public void setAttackPos(boolean attackPos) {
+        this.attackPos = attackPos;
+    }
+
     @Override
     public String toString() {
-        return this.x + ", " + this.y;
+        return this.x + ", " + this.y + "\t" + isAttackPos();
     }
 }

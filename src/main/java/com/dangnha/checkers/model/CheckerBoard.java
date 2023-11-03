@@ -1,7 +1,7 @@
-package com.checkers.model;
+package com.dangnha.checkers.model;
 
-import com.checkers.constants.BoardConstant;
-import com.checkers.constants.CheckerConstant;
+import com.dangnha.checkers.constants.BoardConstant;
+import com.dangnha.checkers.constants.CheckerConstant;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -95,7 +95,7 @@ public class CheckerBoard {
         }
     }
 
-    public Checker findChessmanByPosition(int x, int y) {
+    public Checker findCheckerByPosition(int x, int y) {
         for (Checker checker : checkerList
         ) {
             if (checker.position.getX() == x && checker.position.getY() == y)
@@ -112,13 +112,30 @@ public class CheckerBoard {
     }
 
     public void placeChessman(int currentX, int currentY, int newX, int newY) {
-        Checker currentChessman = findChessmanByPosition(currentX, currentY);
-        System.out.println("Get valid pos: " + currentChessman.getValidPositions(this));
-        if (currentChessman != null && !currentChessman.isAttacken() && currentChessman.isValid(new Position(newX, newY), this)) {
-            currentChessman.position.setX(newX);
-            currentChessman.position.setY(newY);
+        if (currentX != Integer.MIN_VALUE && currentY != Integer.MIN_VALUE && newX != Integer.MIN_VALUE && newY != Integer.MIN_VALUE) {
+
+            Position newPos = new Position(newX, newY);
+            Checker currentChessman = findCheckerByPosition(currentX, currentY);
+            System.out.println("Get valid pos: " + currentChessman.getValidPositions(this));
+            if (currentChessman != null && !currentChessman.isAttacken() && currentChessman.isValid(newPos, this)) {
+
+                // check if new pos is an attack pos
+                if (currentChessman.isAttackPos(newPos, this)) {
+                    int opponentX = Math.abs(currentX + newX) / 2;
+                    int oppenentY = Math.abs(currentY + newY) / 2;
+
+                    Checker opponentChecker = findCheckerByPosition(opponentX, oppenentY);
+                    System.out.println(opponentChecker);
+                    if (opponentChecker != null)
+                        opponentChecker.setAttacken(true);
+                }
+
+                currentChessman.position.setX(newX);
+                currentChessman.position.setY(newY);
+                System.out.println("checker placed!");
+            }
+            refreshBoard();
         }
-        refreshBoard();
     }
 
     public void setBoardStates(String[][] boardStates) {
@@ -150,12 +167,15 @@ public class CheckerBoard {
 
 //        board.placeChessman(1, 0, 0, 1);
 //        board.placeChessman(3,0,2,1);
-        board.placeChessman(0, 1, 1, 2);
-        board.placeChessman(2, 1, 3, 2);
-        board.placeChessman(1, 4, 2, 3);
-        board.placeChessman(3, 4, 4, 3);
-        board.placeChessman(1, 2, 3, 4);
+//        board.placeChessman(0, 1, 1, 2);
+//        board.placeChessman(2, 1, 3, 2);
+//        board.placeChessman(1, 4, 2, 3);
+//        board.placeChessman(3, 4, 4, 3);
+//        board.placeChessman(1, 2, 3, 4);
 //        board.placeChessman(4, 5, 2, 3);
+        board.placeChessman(2, 3, 3, 2);
+        board.placeChessman(3, 2, 1, 2);
+        board.placeChessman(1, 0, 0, 1);
 
 
         System.out.println(board);
