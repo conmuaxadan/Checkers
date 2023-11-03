@@ -1,0 +1,163 @@
+package com.checkers.model;
+
+import com.checkers.constants.BoardConstant;
+import com.checkers.constants.CheckerConstant;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class CheckerBoard {
+    private String[][] boardStates;
+    private List<Checker> checkerList;
+    private boolean attackState;
+
+    public CheckerBoard() {
+        this.boardStates = new String[BoardConstant.N][BoardConstant.N];
+        checkerList = new ArrayList<>();
+        initBoard();
+        attackState = false;
+
+    }
+
+    public CheckerBoard(String[][] boardStates, List<Checker> checkerList) {
+        this.boardStates = new String[BoardConstant.N][BoardConstant.N];
+        this.checkerList = new ArrayList<>(checkerList);
+        for (int i = 0; i < boardStates.length; i++) {
+            System.arraycopy(boardStates[i], 0, this.boardStates[i], 0, this.boardStates.length);
+        }
+        refreshBoard();
+    }
+
+    public void generateBoard() {
+        int cellState = 0;
+
+        for (int i = 0; i < BoardConstant.N; i++) {
+            for (int j = 0; j < BoardConstant.N; j++) {
+                // even rows
+                if (i % 2 == 0) {
+                    if (j % 2 == 0)
+                        cellState = 0;
+                    else cellState = 1;
+                }
+
+                // odd rows
+                if (i % 2 != 0) {
+                    if (j % 2 == 0)
+                        cellState = 1;
+                    else cellState = 0;
+                }
+
+                this.boardStates[i][j] = String.valueOf(cellState);
+            }
+        }
+
+    }
+
+    private void initBoard() {
+        generateBoard();
+
+        // generate white
+        int countWhite = 0;
+        for (int y = 0; y < BoardConstant.N / 2; y++) {
+            for (int x = 0; x < BoardConstant.N; x++) {
+
+                if (countWhite < BoardConstant.CHESS_NUMBERS_PER_SIDE && boardStates[y][x].equals("1")) {
+                    Checker white = new NormalChecker(CheckerConstant.CHESS_TYPE_WHITE, new Position(x, y));
+                    this.checkerList.add(white);
+                    refreshBoard();
+                    countWhite++;
+                }
+            }
+        }
+
+
+        int countBlack = 0;
+        for (int y = BoardConstant.N - 1; y >= BoardConstant.N / 2; y--) {
+            for (int x = 0; x < BoardConstant.N; x++) {
+
+                if (countBlack < BoardConstant.CHESS_NUMBERS_PER_SIDE && boardStates[y][x].equals("1")) {
+                    Checker black = new NormalChecker(CheckerConstant.CHESS_TYPE_BLACK, new Position(x, y));
+                    this.checkerList.add(black);
+                    refreshBoard();
+                    countBlack++;
+                }
+            }
+        }
+    }
+
+    public void refreshBoard() {
+        generateBoard();
+        for (Checker checker : checkerList
+        ) {
+            if (!checker.isAttacken)
+                this.boardStates[checker.getPosition().getY()][checker.getPosition().getX()] = checker.checkerType;
+        }
+    }
+
+    public Checker findChessmanByPosition(int x, int y) {
+        for (Checker checker : checkerList
+        ) {
+            if (checker.position.getX() == x && checker.position.getY() == y)
+                return checker;
+        }
+        return null;
+    }
+
+    /////////
+    // GETTERS AND SETTERS
+    ////////
+    public String[][] getBoardStates() {
+        return boardStates;
+    }
+
+    public void placeChessman(int currentX, int currentY, int newX, int newY) {
+        Checker currentChessman = findChessmanByPosition(currentX, currentY);
+        System.out.println("Get valid pos: " + currentChessman.getValidPositions(this));
+        if (currentChessman != null && !currentChessman.isAttacken() && currentChessman.isValid(new Position(newX, newY), this)) {
+            currentChessman.position.setX(newX);
+            currentChessman.position.setY(newY);
+        }
+        refreshBoard();
+    }
+
+    public void setBoardStates(String[][] boardStates) {
+        this.boardStates = boardStates;
+    }
+
+    public List<Checker> getCheckerList() {
+        return checkerList;
+    }
+
+    public void setCheckerList(List<Checker> checkerList) {
+        this.checkerList = checkerList;
+    }
+
+    @Override
+    public String toString() {
+        String result = "";
+
+        for (String[] row : this.boardStates
+        ) {
+            result += Arrays.toString(row) + "\n";
+        }
+        return result;
+    }
+
+
+    public static void main(String[] args) {
+        CheckerBoard board = new CheckerBoard();
+
+//        board.placeChessman(1, 0, 0, 1);
+//        board.placeChessman(3,0,2,1);
+        board.placeChessman(0, 1, 1, 2);
+        board.placeChessman(2, 1, 3, 2);
+        board.placeChessman(1, 4, 2, 3);
+        board.placeChessman(3, 4, 4, 3);
+        board.placeChessman(1, 2, 3, 4);
+//        board.placeChessman(4, 5, 2, 3);
+
+
+        System.out.println(board);
+    }
+}
