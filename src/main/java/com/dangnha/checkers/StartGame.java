@@ -18,7 +18,7 @@ public class StartGame extends Application {
         Scene scene = new Scene(CheckerBoardView.getInstance(), 475, 475);
         stage.setResizable(false);
         scene.getStylesheets().add(cssFile);
-        stage.setTitle("Hello!");
+        stage.setTitle("Checkers!");
         stage.setScene(scene);
         stage.show();
     }

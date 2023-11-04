@@ -116,7 +116,7 @@ public class CheckerBoard {
             Position newPos = new Position(newX, newY);
             Checker currentChessman = findCheckerByPosition(currentX, currentY);
             System.out.println("Get valid pos: " + currentChessman.getValidPositions(this));
-            if (currentChessman != null && !currentChessman.isAttacken() && currentChessman.isValid(newPos, this)) {
+            if (currentChessman.isValid(newPos, this)) {
 
                 // check if new pos is an attack pos
                 if (currentChessman.isAttackPos(newPos, this)) {

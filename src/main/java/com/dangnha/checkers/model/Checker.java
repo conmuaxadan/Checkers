@@ -8,17 +8,14 @@ public abstract class Checker {
     protected String checkerType;
     protected Position position;
     protected String iconLink;
-    protected boolean isAttacken;
+
 
     public Checker(String checkerType, Position position) {
         this.checkerType = checkerType;
         this.position = position;
-        isAttacken = false;
-    }
-
-    public void moveCheckerToAnotherPos(Checker checker, Position pos) {
 
     }
+
     public boolean isValid(Position newPos, CheckerBoard board){
         for (Position pos: this.getValidPositions(board)
              ) {
@@ -62,16 +59,11 @@ public abstract class Checker {
         this.iconLink = iconLink;
     }
 
-    public boolean isAttacken() {
-        return isAttacken;
-    }
 
-    public void setAttacken(boolean attacken) {
-        isAttacken = attacken;
-    }
+
 
     @Override
     public String toString() {
-        return "CHECKER: " + this.position + ", " + this.checkerType + ", " + this.isAttacken;
+        return "CHECKER: " + this.position + ", " + this.checkerType;
     }
 }
