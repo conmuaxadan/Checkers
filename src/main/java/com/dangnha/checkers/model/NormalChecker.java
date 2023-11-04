@@ -43,7 +43,7 @@ public class NormalChecker extends Checker {
             else {
                 // if this is an opponent chessman
                 if (!board.getBoardStates()[aheadPos][leftPos].equals(this.getCheckerType())) {
-                    if (leftPos - 1 >= 0 && aheadPosIfCan < BoardConstant.N)
+                    if (leftPos - 1 >= 0 && (aheadPosIfCan >= 0 && aheadPosIfCan < BoardConstant.N))
                         if (board.getBoardStates()[aheadPosIfCan][leftPos - 1].equals("1")) {
                             result.add(new Position(leftPos - 1, aheadPosIfCan, true));
                         }
@@ -58,11 +58,11 @@ public class NormalChecker extends Checker {
             else {
                 // if this is an opponent chessman
                 if (!board.getBoardStates()[aheadPos][rightPos].equals(this.getCheckerType())) {
-                    if (rightPos + 1 < BoardConstant.N) {
+                    if (rightPos + 1 < BoardConstant.N && (aheadPosIfCan >= 0 && aheadPosIfCan < BoardConstant.N))
                         if (board.getBoardStates()[aheadPosIfCan][rightPos + 1].equals("1")) {
                             result.add(new Position(rightPos + 1, aheadPosIfCan, true));
                         }
-                    }
+
                 }
             }
         }
