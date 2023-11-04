@@ -43,6 +43,6 @@ public class Position {
 
     @Override
     public String toString() {
-        return this.x + ", " + this.y + "\t" + isAttackPos();
+        return "(" +this.x + ", " + this.y + ", " + isAttackPos()+")";
     }
 }

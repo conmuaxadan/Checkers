@@ -59,7 +59,6 @@ public class NormalChecker extends Checker {
                 // if this is an opponent chessman
                 if (!board.getBoardStates()[aheadPos][rightPos].equals(this.getCheckerType())) {
                     if (rightPos + 1 < BoardConstant.N) {
-                        System.out.println(aheadPosIfCan);
                         if (board.getBoardStates()[aheadPosIfCan][rightPos + 1].equals("1")) {
                             result.add(new Position(rightPos + 1, aheadPosIfCan, true));
                         }

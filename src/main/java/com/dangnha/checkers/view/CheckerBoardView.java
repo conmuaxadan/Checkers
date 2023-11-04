@@ -4,10 +4,7 @@ import com.dangnha.checkers.constants.BoardConstant;
 import com.dangnha.checkers.constants.CheckerConstant;
 import com.dangnha.checkers.eventsHandler.CheckerButtonEventHandler;
 import com.dangnha.checkers.eventsHandler.CheckerPaneCellEventHandler;
-import com.dangnha.checkers.model.Checker;
-import com.dangnha.checkers.model.CheckerBoard;
-import com.dangnha.checkers.model.NormalChecker;
-import com.dangnha.checkers.model.Position;
+import com.dangnha.checkers.model.*;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -15,6 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+
+import java.io.File;
 
 public class CheckerBoardView extends GridPane {
     private static CheckerBoardView instance;
@@ -46,10 +45,10 @@ public class CheckerBoardView extends GridPane {
                 return new NormalChecker(CheckerConstant.CHESS_TYPE_WHITE, pos);
             }
             case CheckerConstant.CHESS_TYPE_KING_BLACK -> {
-                return new NormalChecker(CheckerConstant.CHESS_TYPE_KING_BLACK, pos);
+                return new KingChecker(CheckerConstant.CHESS_TYPE_KING_BLACK, pos);
             }
             case CheckerConstant.CHESS_TYPE_KING_WHITE -> {
-                return new NormalChecker(CheckerConstant.CHESS_TYPE_KING_WHITE, pos);
+                return new KingChecker(CheckerConstant.CHESS_TYPE_KING_WHITE, pos);
             }
         }
         return null;
@@ -63,13 +62,9 @@ public class CheckerBoardView extends GridPane {
      * @param boardModel is the current {@link CheckerBoard}
      */
     public void refreshBoardView(CheckerBoard boardModel) {
-        try {
-            this.getChildren().clear();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
 
         String[][] boardModelStates = boardModel.getBoardStates();
+        System.out.println(boardModel);
         for (int y = 0; y < boardModelStates.length; y++) {
             for (int x = 0; x < boardModelStates.length; x++) {
                 String cell = boardModelStates[y][x];
@@ -80,6 +75,7 @@ public class CheckerBoardView extends GridPane {
 
                     this.add(darkCell, x, y);
                 } else {
+                    System.out.print(cell + ", ");
                     HBox checkerButtonBox = new HBox();
                     checkerButtonBox.getStyleClass().add("dark-cell");
 
@@ -108,7 +104,8 @@ public class CheckerBoardView extends GridPane {
 
     private Button createCheckerButton(Checker checker) {
         try {
-            String iconLink = this.getClass().getResource(checker.getIconLink()).toString();
+            System.out.println(checker.getIconLink());
+            String iconLink = new File(checker.getIconLink()).toURI().toString();
             Image img = new Image(iconLink);
             ImageView imgView = new ImageView(img);
             imgView.getStyleClass().add("checker-icon");

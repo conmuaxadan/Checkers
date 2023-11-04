@@ -121,11 +121,13 @@ public class CheckerBoard {
 
                 // check if new pos is an attack pos
                 if (currentChessman.isAttackPos(newPos, this)) {
-                    int opponentX = Math.abs(currentX + newX) / 2;
-                    int opponentY = Math.abs(currentY + newY) / 2;
+                    int opponentX = (currentX + newX) / 2;
+                    int opponentY = (currentY + newY) / 2;
+
+//                    System.out.println("opponent pos: " + opponentX + " " + opponentY);
 
                     Checker opponentChecker = findCheckerByPosition(opponentX, opponentY);
-                    System.out.println(opponentChecker);
+                    System.out.println(opponentChecker.getPosition());
                     if (opponentChecker != null)
                         opponentChecker.setAttacken(true);
                 }
@@ -133,18 +135,34 @@ public class CheckerBoard {
                 currentChessman.position.setX(newX);
                 currentChessman.position.setY(newY);
                 System.out.println("checker placed!");
+                makeKingChecker(newX, newY);
             }
-            refreshBoard();
         }
     }
 
     public void makeKingChecker(int x, int y) {
         Checker checker = findCheckerByPosition(x, y);
-        if (checker.getCheckerType().equalsIgnoreCase(CheckerConstant.CHESS_TYPE_WHITE) && checker.getPosition().getY() == BoardConstant.N - 1)
-            checker.setCheckerType(CheckerConstant.CHESS_TYPE_KING_WHITE);
-        else if (checker.getCheckerType().equalsIgnoreCase(CheckerConstant.CHESS_TYPE_BLACK) && checker.getPosition().getY() == 0)
-            checker.setCheckerType(CheckerConstant.CHESS_TYPE_KING_BLACK);
-        refreshBoard();
+        if (checker == null)
+            return;
+        else {
+            Position currentPos = checker.getPosition();
+            Checker newChecker = null;
+            if (checker.checkerType.equals(CheckerConstant.CHESS_TYPE_WHITE) && y == BoardConstant.N - 1) {
+                newChecker = new KingChecker(CheckerConstant.CHESS_TYPE_KING_WHITE, currentPos);
+                this.checkerList.remove(checker);
+                this.checkerList.add(newChecker);
+
+            }
+
+            if (checker.checkerType.equals(CheckerConstant.CHESS_TYPE_BLACK) && y == 0) {
+                newChecker = new KingChecker(CheckerConstant.CHESS_TYPE_KING_BLACK, currentPos);
+                this.checkerList.remove(checker);
+                this.checkerList.add(newChecker);
+            }
+
+            System.out.println(checkerList);
+            refreshBoard();
+        }
     }
 
     public void setBoardStates(String[][] boardStates) {
@@ -185,6 +203,8 @@ public class CheckerBoard {
         board.placeChecker(2, 3, 3, 2);
         board.placeChecker(3, 2, 1, 2);
         board.placeChecker(1, 0, 0, 1);
+        board.placeChecker(3, 2, 2, 1);
+        board.placeChecker(2, 1, 1, 0);
 
 
         System.out.println(board);
