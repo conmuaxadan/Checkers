@@ -75,7 +75,6 @@ public class CheckerBoardView extends GridPane {
 
                     this.add(darkCell, x, y);
                 } else {
-                    System.out.print(cell + ", ");
                     HBox checkerButtonBox = new HBox();
                     checkerButtonBox.getStyleClass().add("dark-cell");
 
@@ -104,7 +103,6 @@ public class CheckerBoardView extends GridPane {
 
     private Button createCheckerButton(Checker checker) {
         try {
-            System.out.println(checker.getIconLink());
             String iconLink = new File(checker.getIconLink()).toURI().toString();
             Image img = new Image(iconLink);
             ImageView imgView = new ImageView(img);
@@ -116,9 +114,6 @@ public class CheckerBoardView extends GridPane {
             checkerButton.setGraphic(imgView);
             checkerButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new CheckerButtonEventHandler());
             checkerButton.getStyleClass().add("checker-button");
-
-//            checkerButton.setPrefWidth(CheckerConstant.CHESS_WIDTH);
-//            checkerButton.setPrefHeight(CheckerConstant.CHESS_HEIGHT);
 
             return checkerButton;
         } catch (NullPointerException e) {

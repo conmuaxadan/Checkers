@@ -90,8 +90,7 @@ public class CheckerBoard {
         generateBoard();
         for (Checker checker : checkerList
         ) {
-            if (!checker.isAttacken)
-                this.boardStates[checker.getPosition().getY()][checker.getPosition().getX()] = checker.checkerType;
+            this.boardStates[checker.getPosition().getY()][checker.getPosition().getX()] = checker.checkerType;
         }
     }
 
@@ -124,12 +123,11 @@ public class CheckerBoard {
                     int opponentX = (currentX + newX) / 2;
                     int opponentY = (currentY + newY) / 2;
 
-//                    System.out.println("opponent pos: " + opponentX + " " + opponentY);
-
                     Checker opponentChecker = findCheckerByPosition(opponentX, opponentY);
-                    System.out.println(opponentChecker.getPosition());
-                    if (opponentChecker != null)
-                        opponentChecker.setAttacken(true);
+
+                    removeAttackedChecker(opponentChecker);
+
+
                 }
 
                 currentChessman.position.setX(newX);
@@ -138,6 +136,11 @@ public class CheckerBoard {
                 makeKingChecker(newX, newY);
             }
         }
+    }
+
+    public void removeAttackedChecker(Checker attackedChecker) {
+        this.boardStates[attackedChecker.getPosition().getY()][attackedChecker.getPosition().getX()] = "1";
+        this.checkerList.remove(attackedChecker);
     }
 
     public void makeKingChecker(int x, int y) {
@@ -160,7 +163,6 @@ public class CheckerBoard {
                 this.checkerList.add(newChecker);
             }
 
-            System.out.println(checkerList);
             refreshBoard();
         }
     }

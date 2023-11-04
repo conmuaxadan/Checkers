@@ -70,4 +70,8 @@ public abstract class Checker {
         isAttacken = attacken;
     }
 
+    @Override
+    public String toString() {
+        return "CHECKER: " + this.position + ", " + this.checkerType + ", " + this.isAttacken;
+    }
 }

@@ -15,7 +15,7 @@ public class StartGame extends Application {
 
         GameController gameController = GameController.getInstance();
         gameController.initGame();
-        Scene scene = new Scene(CheckerBoardView.getInstance(), 525, 475);
+        Scene scene = new Scene(CheckerBoardView.getInstance(), 475, 475);
         stage.setResizable(false);
         scene.getStylesheets().add(cssFile);
         stage.setTitle("Hello!");
