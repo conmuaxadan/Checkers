@@ -18,7 +18,6 @@ public class NormalChecker extends Checker {
     @Override
     public List<Position> getValidPositions(CheckerBoard board) {
         List<Position> result = new ArrayList<>();
-        Checker attackenChecker = null;
 
         int aheadPos = 0, aheadPosIfCan = 0, leftPos, rightPos;
         if (this.checkerType.equals(CheckerConstant.CHESS_TYPE_WHITE)) {
@@ -36,36 +35,8 @@ public class NormalChecker extends Checker {
         leftPos = this.position.getX() - 1;
         rightPos = this.position.getX() + 1;
 
-        // check left
-        if (leftPos >= 0) {
-            if (board.getBoardStates()[aheadPos][leftPos].equals("1"))
-                result.add(new Position(leftPos, aheadPos));
-            else {
-                // if this is an opponent chessman
-                if (!board.getBoardStates()[aheadPos][leftPos].equals(this.getCheckerType())) {
-                    if (leftPos - 1 >= 0 && (aheadPosIfCan >= 0 && aheadPosIfCan < BoardConstant.N))
-                        if (board.getBoardStates()[aheadPosIfCan][leftPos - 1].equals("1")) {
-                            result.add(new Position(leftPos - 1, aheadPosIfCan, true));
-                        }
-                }
-            }
-        }
+        addValidPosToResult(result, leftPos, rightPos, aheadPos, aheadPosIfCan, board);
 
-        // check right
-        if (rightPos < BoardConstant.N) {
-            if (board.getBoardStates()[aheadPos][rightPos].equals("1"))
-                result.add(new Position(rightPos, aheadPos));
-            else {
-                // if this is an opponent chessman
-                if (!board.getBoardStates()[aheadPos][rightPos].equals(this.getCheckerType())) {
-                    if (rightPos + 1 < BoardConstant.N && (aheadPosIfCan >= 0 && aheadPosIfCan < BoardConstant.N))
-                        if (board.getBoardStates()[aheadPosIfCan][rightPos + 1].equals("1")) {
-                            result.add(new Position(rightPos + 1, aheadPosIfCan, true));
-                        }
-
-                }
-            }
-        }
         return result;
     }
 

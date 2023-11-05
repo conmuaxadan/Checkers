@@ -21,6 +21,8 @@ public class KingChecker extends Checker {
 
         result.addAll(getValidPosInTheTop(board));
         result.addAll(getValidPosInTheBottom(board));
+
+        System.out.println(result);
         return result;
     }
 
@@ -81,42 +83,5 @@ public class KingChecker extends Checker {
         return result;
     }
 
-    /**
-     * Encapsulates algorithm check valid pos in left and right to prevent duplicate codes
-     */
-    private void addValidPosToResult(List<Position> result, int leftPos, int rightPos, int aheadPos,
-                                     int aheadPosIfCan, CheckerBoard board) {
-        // check left
-        if (leftPos >= 0) {
-            if (board.getBoardStates()[aheadPos][leftPos].equals("1"))
-                result.add(new Position(leftPos, aheadPos));
-            else {
-                // if this is an opponent chessman
-                // check if (B or W not in KB or KW) => opponent
-                if (!this.getCheckerType().endsWith(board.getBoardStates()[aheadPos][leftPos])) {
-                    if (leftPos - 1 >= 0 && (aheadPosIfCan >= 0 && aheadPosIfCan < BoardConstant.N))
-                        if (board.getBoardStates()[aheadPosIfCan][leftPos - 1].equals("1")) {
-                            result.add(new Position(leftPos - 1, aheadPosIfCan, true));
-                        }
-                }
-            }
-        }
 
-        // check right
-        if (rightPos < BoardConstant.N) {
-            if (board.getBoardStates()[aheadPos][rightPos].equals("1"))
-                result.add(new Position(rightPos, aheadPos));
-            else {
-                // if this is an opponent chessman
-                // check if (B or W not in KB or KW) => opponent
-                if (!this.getCheckerType().endsWith(board.getBoardStates()[aheadPos][leftPos])) {
-                    if (rightPos + 1 < BoardConstant.N && (aheadPosIfCan >= 0 && aheadPosIfCan < BoardConstant.N))
-                        if (board.getBoardStates()[aheadPosIfCan][rightPos + 1].equals("1")) {
-                            result.add(new Position(rightPos + 1, aheadPosIfCan, true));
-                        }
-
-                }
-            }
-        }
-    }
 }
