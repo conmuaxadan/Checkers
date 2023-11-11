@@ -112,6 +112,7 @@ public class CheckerBoardView extends GridPane {
 
             Button checkerButton = new Button();
             checkerButton.setGraphic(imgView);
+
             checkerButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new CheckerButtonEventHandler());
             checkerButton.getStyleClass().add("checker-button");
 
@@ -131,7 +132,6 @@ public class CheckerBoardView extends GridPane {
 
         }
     }
-
 
 }
 

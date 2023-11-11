@@ -22,4 +22,7 @@ public class GameController {
         CheckerBoard newGameBoard = new CheckerBoard();
         this.checkerBoardController.setCheckerBoard(newGameBoard);
     }
+
+
+
 }

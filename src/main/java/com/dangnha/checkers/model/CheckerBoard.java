@@ -11,12 +11,14 @@ public class CheckerBoard {
     private String[][] boardStates;
     private List<Checker> checkerList;
     private boolean attackState;
+    private boolean isBlackTurn;
 
     public CheckerBoard() {
         this.boardStates = new String[BoardConstant.N][BoardConstant.N];
         checkerList = new ArrayList<>();
         initBoard();
         attackState = false;
+        isBlackTurn = true;
 
     }
 
@@ -113,28 +115,41 @@ public class CheckerBoard {
     public void placeChecker(int currentX, int currentY, int newX, int newY) {
         if (currentX != Integer.MIN_VALUE && currentY != Integer.MIN_VALUE && newX != Integer.MIN_VALUE && newY != Integer.MIN_VALUE) {
 
-            Position newPos = new Position(newX, newY);
             Checker currentChessman = findCheckerByPosition(currentX, currentY);
-            System.out.println("Get valid pos: " + currentChessman.getValidPositions(this));
-            if (currentChessman.isValid(newPos, this)) {
 
-                // check if new pos is an attack pos
-                if (currentChessman.isAttackPos(newPos, this)) {
-                    int opponentX = (currentX + newX) / 2;
-                    int opponentY = (currentY + newY) / 2;
-
-                    Checker opponentChecker = findCheckerByPosition(opponentX, opponentY);
-
-                    removeAttackedChecker(opponentChecker);
-
-
-                }
-
-                currentChessman.position.setX(newX);
-                currentChessman.position.setY(newY);
-                System.out.println("checker placed!");
-                makeKingChecker(newX, newY);
+            if (isBlackTurn && (currentChessman.getCheckerType().equals(CheckerConstant.CHESS_TYPE_BLACK) || currentChessman.getCheckerType().equals(CheckerConstant.CHESS_TYPE_KING_BLACK))) {
+                setCheckerPosition(currentX, currentY, newX, newY, currentChessman);
+                isBlackTurn = false;
             }
+
+            if (!isBlackTurn && (currentChessman.getCheckerType().equals(CheckerConstant.CHESS_TYPE_WHITE) || currentChessman.getCheckerType().equals(CheckerConstant.CHESS_TYPE_KING_WHITE))) {
+                setCheckerPosition(currentX, currentY, newX, newY, currentChessman);
+                isBlackTurn = true;
+            }
+        }
+    }
+
+    private void setCheckerPosition(int currentX, int currentY, int newX, int newY, Checker currentChessman) {
+        Position newPos = new Position(newX, newY);
+
+        if (currentChessman.isValid(newPos, this)) {
+
+            // check if new pos is an attack pos
+            if (currentChessman.isAttackPos(newPos, this)) {
+                int opponentX = (currentX + newX) / 2;
+                int opponentY = (currentY + newY) / 2;
+
+                Checker opponentChecker = findCheckerByPosition(opponentX, opponentY);
+
+                removeAttackedChecker(opponentChecker);
+
+
+            }
+
+            currentChessman.position.setX(newX);
+            currentChessman.position.setY(newY);
+            System.out.println("checker placed!");
+            makeKingChecker(newX, newY);
         }
     }
 
@@ -167,6 +182,24 @@ public class CheckerBoard {
         }
     }
 
+    public List<CheckerBoard> generateNeighbours() {
+        List<CheckerBoard> result = new ArrayList<>();
+
+        CheckerBoard checkerBoardClone = new CheckerBoard(this.boardStates, this.checkerList);
+        CheckerBoard neighbour = null;
+        for (Checker checker: checkerBoardClone.checkerList) {
+            for (Position pos: checker.getValidPositions(checkerBoardClone)) {
+                checkerBoardClone = new CheckerBoard(this.boardStates, this.checkerList);
+                neighbour = new CheckerBoard(checkerBoardClone.boardStates, checkerBoardClone.checkerList);
+                neighbour.placeChecker(checker.getPosition().getX(), checker.getPosition().getY(), pos.getX(), pos.getY());
+                result.add(neighbour);
+            }
+        }
+
+        return result;
+
+    }
+
     public void setBoardStates(String[][] boardStates) {
         this.boardStates = boardStates;
     }
@@ -190,6 +223,21 @@ public class CheckerBoard {
         return result;
     }
 
+    public boolean isAttackState() {
+        return attackState;
+    }
+
+    public void setAttackState(boolean attackState) {
+        this.attackState = attackState;
+    }
+
+    public boolean isBlackTurn() {
+        return isBlackTurn;
+    }
+
+    public void setBlackTurn(boolean blackTurn) {
+        isBlackTurn = blackTurn;
+    }
 
     public static void main(String[] args) {
         CheckerBoard board = new CheckerBoard();
@@ -202,13 +250,14 @@ public class CheckerBoard {
 //        board.placeChessman(3, 4, 4, 3);
 //        board.placeChessman(1, 2, 3, 4);
 //        board.placeChessman(4, 5, 2, 3);
-        board.placeChecker(2, 3, 3, 2);
-        board.placeChecker(3, 2, 1, 2);
-        board.placeChecker(1, 0, 0, 1);
-        board.placeChecker(3, 2, 2, 1);
-        board.placeChecker(2, 1, 1, 0);
+//        board.placeChecker(2, 3, 3, 2);
+//        board.placeChecker(3, 2, 1, 2);
+//        board.placeChecker(1, 0, 0, 1);
+//        board.placeChecker(3, 2, 2, 1);
+//        board.placeChecker(2, 1, 1, 0);
 
+        System.out.println(board.generateNeighbours());
 
-        System.out.println(board);
+//        System.out.println(board);
     }
 }

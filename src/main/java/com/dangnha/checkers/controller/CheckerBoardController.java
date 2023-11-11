@@ -1,5 +1,7 @@
 package com.dangnha.checkers.controller;
 
+import com.dangnha.checkers.constants.CheckerConstant;
+import com.dangnha.checkers.model.Checker;
 import com.dangnha.checkers.model.CheckerBoard;
 import com.dangnha.checkers.model.Position;
 import com.dangnha.checkers.view.CheckerBoardView;
@@ -36,12 +38,19 @@ public class CheckerBoardController {
     }
 
     public void displayAvailableMoves(Position currentCheckerPos) {
-        List<Position> availableMoves = checkerBoard.findCheckerByPosition(currentCheckerPos.getX(),
-                currentCheckerPos.getY()).getValidPositions(checkerBoard);
+        Checker currentChecker = checkerBoard.findCheckerByPosition(currentCheckerPos.getX(),
+                currentCheckerPos.getY());
+        List<Position> availableMoves = currentChecker.getValidPositions(checkerBoard);
 
-        checkerBoardView.refreshBoardView(checkerBoard);
-        for (Position availableMove : availableMoves) {
-            checkerBoardView.highlightCell(availableMove.getX(), availableMove.getY());
+        boolean isBlackTurn = checkerBoard.isBlackTurn();
+
+        if ((isBlackTurn && (currentChecker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_BLACK) || currentChecker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_KING_BLACK)))
+                || (!isBlackTurn && (currentChecker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_WHITE) || currentChecker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_KING_WHITE))))
+        {
+            checkerBoardView.refreshBoardView(checkerBoard);
+            for (Position availableMove : availableMoves) {
+                checkerBoardView.highlightCell(availableMove.getX(), availableMove.getY());
+            }
         }
     }
 

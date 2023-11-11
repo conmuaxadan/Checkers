@@ -2,6 +2,7 @@ package com.dangnha.checkers.eventsHandler;
 
 import com.dangnha.checkers.controller.CheckerBoardController;
 import com.dangnha.checkers.model.Position;
+import com.dangnha.checkers.view.CheckerBoardView;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
