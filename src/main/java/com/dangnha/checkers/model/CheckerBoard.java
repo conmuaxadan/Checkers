@@ -124,6 +124,7 @@ public class CheckerBoard {
 
             if (!isBlackTurn && (currentChessman.getCheckerType().equals(CheckerConstant.CHESS_TYPE_WHITE) || currentChessman.getCheckerType().equals(CheckerConstant.CHESS_TYPE_KING_WHITE))) {
                 setCheckerPosition(currentX, currentY, newX, newY, currentChessman);
+                System.out.println("White heuristic: " + this.heuristic());
                 isBlackTurn = true;
             }
         }
@@ -131,6 +132,7 @@ public class CheckerBoard {
 
     private void setCheckerPosition(int currentX, int currentY, int newX, int newY, Checker currentChessman) {
         Position newPos = new Position(newX, newY);
+        List<Position> attackPosList = new ArrayList<>();
 
         if (currentChessman.isValid(newPos, this)) {
 
@@ -187,8 +189,8 @@ public class CheckerBoard {
 
         CheckerBoard checkerBoardClone = new CheckerBoard(this.boardStates, this.checkerList);
         CheckerBoard neighbour = null;
-        for (Checker checker: checkerBoardClone.checkerList) {
-            for (Position pos: checker.getValidPositions(checkerBoardClone)) {
+        for (Checker checker : checkerBoardClone.checkerList) {
+            for (Position pos : checker.getValidPositions(checkerBoardClone)) {
                 checkerBoardClone = new CheckerBoard(this.boardStates, this.checkerList);
                 neighbour = new CheckerBoard(checkerBoardClone.boardStates, checkerBoardClone.checkerList);
                 neighbour.placeChecker(checker.getPosition().getX(), checker.getPosition().getY(), pos.getX(), pos.getY());
@@ -199,6 +201,17 @@ public class CheckerBoard {
         return result;
 
     }
+
+    public int heuristic() {
+        int blackPieces = (int) checkerList.stream().filter(checker -> checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_BLACK)).count();
+        int blackKings = (int) checkerList.stream().filter(checker -> checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_KING_BLACK)).count();
+
+        int whitePieces = (int) checkerList.stream().filter(checker -> checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_WHITE)).count();
+        int whiteKings = (int) checkerList.stream().filter(checker -> checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_KING_WHITE)).count();
+
+        return (-blackPieces + whitePieces) + (-blackKings * 5 + whiteKings * 5);
+    }
+
 
     public void setBoardStates(String[][] boardStates) {
         this.boardStates = boardStates;
@@ -256,7 +269,7 @@ public class CheckerBoard {
 //        board.placeChecker(3, 2, 2, 1);
 //        board.placeChecker(2, 1, 1, 0);
 
-        System.out.println(board.generateNeighbours());
+        System.out.println(board.heuristic());
 
 //        System.out.println(board);
     }

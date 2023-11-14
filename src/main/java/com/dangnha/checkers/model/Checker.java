@@ -1,8 +1,10 @@
 package com.dangnha.checkers.model;
 
 import com.dangnha.checkers.constants.BoardConstant;
+import com.dangnha.checkers.constants.CheckerConstant;
 import com.dangnha.checkers.utils.CheckerUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Checker {
@@ -76,7 +78,11 @@ public abstract class Checker {
                 if (CheckerUtils.isOpponent(this.getCheckerType(), board.getBoardStates()[aheadPos][leftPos])) {
                     if (leftPos - 1 >= 0 && (aheadPosIfCan >= 0 && aheadPosIfCan < BoardConstant.N))
                         if (board.getBoardStates()[aheadPosIfCan][leftPos - 1].equals("1")) {
-                            result.add(new Position(leftPos - 1, aheadPosIfCan, true));
+
+                            if (hasMultipleMoves(leftPos - 1, aheadPosIfCan, board).isEmpty())
+                                result.add(new Position(leftPos - 1, aheadPosIfCan, true));
+                            else
+                                result.addAll(hasMultipleMoves(leftPos - 1, aheadPosIfCan, board));
                         }
                 }
             }
@@ -93,11 +99,60 @@ public abstract class Checker {
                 if (CheckerUtils.isOpponent(this.getCheckerType(), board.getBoardStates()[aheadPos][rightPos])) {
                     if (rightPos + 1 < BoardConstant.N && (aheadPosIfCan >= 0 && aheadPosIfCan < BoardConstant.N))
                         if (board.getBoardStates()[aheadPosIfCan][rightPos + 1].equals("1")) {
-                            result.add(new Position(rightPos + 1, aheadPosIfCan, true));
+
+                            if (hasMultipleMoves(rightPos + 1, aheadPosIfCan, board).isEmpty())
+                                result.add(new Position(rightPos + 1, aheadPosIfCan, true));
+                            else
+                                result.addAll(hasMultipleMoves(rightPos + 1, aheadPosIfCan, board));
                         }
 
                 }
             }
         }
+    }
+
+    private List<Position> hasMultipleMoves(int x, int y, CheckerBoard board) {
+        List<Position> result = new ArrayList<>();
+        result.add(new Position(x, y, true));
+
+        //check white
+        if (this.getCheckerType().equals(CheckerConstant.CHESS_TYPE_WHITE) || this.getCheckerType().startsWith("K")) {
+
+            // check right
+            if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y + 1][x + 1])) {
+                if (x + 2 < BoardConstant.N && (y + 2 >= 0 && y + 2 < BoardConstant.N)) {
+                    if (board.getBoardStates()[y + 2][x + 2].equals("1"))
+                        result.add(new Position(x + 2, y + 2, true));
+                }
+            }
+
+            // check left
+            if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y + 1][x - 1])) {
+                if (x - 2 >= 0 && (y + 2 >= 0 && y + 2 < BoardConstant.N)) {
+                    if (board.getBoardStates()[y + 2][x - 2].equals("1"))
+                        result.add(new Position(x - 2, y + 2, true));
+                }
+            }
+        }
+        //check black
+        if (this.getCheckerType().equals(CheckerConstant.CHESS_TYPE_BLACK) || this.getCheckerType().startsWith("K")) {
+
+            // check right
+            if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y - 1][x + 1])) {
+                if (x + 2 < BoardConstant.N && (y - 2 >= 0 && y - 2 < BoardConstant.N)) {
+                    if (board.getBoardStates()[y - 2][x + 2].equals("1"))
+                        result.add(new Position(x + 2, y - 2, true));
+                }
+            }
+
+            // check left
+            if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y - 1][x - 1])) {
+                if (x - 2 >= 0 && (y - 2 >= 0 && y - 2 < BoardConstant.N)) {
+                    if (board.getBoardStates()[y - 2][x - 2].equals("1"))
+                        result.add(new Position(x - 2, y - 2, true));
+                }
+            }
+        }
+        return result;
     }
 }
