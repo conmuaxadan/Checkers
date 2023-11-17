@@ -23,7 +23,6 @@ public class CheckerPaneCellEventHandler implements EventHandler<MouseEvent> {
 
         checkerBoardController.setNewCheckerPos(new Position(newX, newY));
 
-        System.out.println(checkerBoardController.getCurrentCheckerPos() + "\t" + checkerBoardController.getNewCheckerPos());
         // place checker
         if (checkerBoardController.getCurrentCheckerPos() != null) {
             checkerBoardController.placeChecker(checkerBoardController.getCurrentCheckerPos(), checkerBoardController.getNewCheckerPos());

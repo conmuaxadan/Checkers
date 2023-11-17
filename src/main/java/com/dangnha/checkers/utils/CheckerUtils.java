@@ -8,7 +8,7 @@ public class CheckerUtils {
      * @return true if they are opponents, false if not. Example: str1 = "KB", str2 = "W" => true
      */
     public static boolean isOpponent(String str1, String str2) {
-        System.out.println(str1 + " " + str2);
+//        System.out.println(str1 + " " + str2);
         if (str1.startsWith("K") && str2.startsWith("K")) {
             return str1.charAt(1) != str2.charAt(1);
         } else {

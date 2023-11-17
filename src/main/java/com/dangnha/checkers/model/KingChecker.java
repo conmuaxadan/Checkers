@@ -22,7 +22,7 @@ public class KingChecker extends Checker {
         result.addAll(getValidPosInTheTop(board));
         result.addAll(getValidPosInTheBottom(board));
 
-        System.out.println(result);
+//        System.out.println(result);
         return result;
     }
 

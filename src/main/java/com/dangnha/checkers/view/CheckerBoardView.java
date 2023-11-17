@@ -64,7 +64,7 @@ public class CheckerBoardView extends GridPane {
     public void refreshBoardView(CheckerBoard boardModel) {
 
         String[][] boardModelStates = boardModel.getBoardStates();
-        System.out.println(boardModel);
+//        System.out.println(boardModel);
         for (int y = 0; y < boardModelStates.length; y++) {
             for (int x = 0; x < boardModelStates.length; x++) {
                 String cell = boardModelStates[y][x];
@@ -97,7 +97,7 @@ public class CheckerBoardView extends GridPane {
 
         Pane darkCell = new Pane();
         darkCell.getStyleClass().add("dark-cell");
-//        darkCell.setAlignment(Pos.CENTER);
+
         return darkCell;
     }
 

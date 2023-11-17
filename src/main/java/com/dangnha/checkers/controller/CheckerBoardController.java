@@ -32,7 +32,6 @@ public class CheckerBoardController {
 
     public void placeChecker(Position currentCheckerPos, Position newCheckerPos) {
         checkerBoard.placeChecker(currentCheckerPos.getX(), currentCheckerPos.getY(), newCheckerPos.getX(), newCheckerPos.getY());
-        System.out.println(checkerBoard);
 
         checkerBoardView.refreshBoardView(checkerBoard);
     }

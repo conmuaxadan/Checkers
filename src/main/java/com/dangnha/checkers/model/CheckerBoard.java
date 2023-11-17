@@ -209,7 +209,27 @@ public class CheckerBoard {
         int whitePieces = (int) checkerList.stream().filter(checker -> checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_WHITE)).count();
         int whiteKings = (int) checkerList.stream().filter(checker -> checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_KING_WHITE)).count();
 
-        return (-blackPieces + whitePieces) + (-blackKings * 5 + whiteKings * 5);
+        int countAttackPosWhite = 0;
+        for (Checker checker : checkerList) {
+            if (checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_WHITE)) {
+                for (Position validPos : checker.getValidPositions(this)
+                ) {
+                    if (validPos.isAttackPos())
+                        countAttackPosWhite++;
+                }
+            }
+        }
+
+        int countAttackPosBlack = 0;
+        for (Checker checker : checkerList) {
+            if (checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_BLACK)) {
+                for (Position validPos : checker.getValidPositions(this))
+                    if (validPos.isAttackPos())
+                        countAttackPosBlack++;
+            }
+        }
+
+        return (-blackPieces + whitePieces) + (-blackKings * 5 + whiteKings * 5) + (-countAttackPosBlack * 2 + countAttackPosWhite * 2);
     }
 
 

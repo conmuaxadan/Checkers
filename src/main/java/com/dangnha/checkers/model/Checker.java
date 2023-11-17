@@ -94,8 +94,8 @@ public abstract class Checker {
             else {
                 // if this is an opponent chessman
                 // check if (B or W not in KB or KW) => opponent
-                System.out.println(this.getCheckerType() + " " + board.getBoardStates()[aheadPos][rightPos]);
-                System.out.println(CheckerUtils.isOpponent(this.getCheckerType(), board.getBoardStates()[aheadPos][rightPos]));
+//                System.out.println(this.getCheckerType() + " " + board.getBoardStates()[aheadPos][rightPos]);
+//                System.out.println(CheckerUtils.isOpponent(this.getCheckerType(), board.getBoardStates()[aheadPos][rightPos]));
                 if (CheckerUtils.isOpponent(this.getCheckerType(), board.getBoardStates()[aheadPos][rightPos])) {
                     if (rightPos + 1 < BoardConstant.N && (aheadPosIfCan >= 0 && aheadPosIfCan < BoardConstant.N))
                         if (board.getBoardStates()[aheadPosIfCan][rightPos + 1].equals("1")) {
@@ -114,42 +114,43 @@ public abstract class Checker {
     private List<Position> hasMultipleMoves(int x, int y, CheckerBoard board) {
         List<Position> result = new ArrayList<>();
         result.add(new Position(x, y, true));
+        if (x > 0 && x < BoardConstant.N - 1 && y > 0 && y < BoardConstant.N - 1) {
+            //check white
+            if (this.getCheckerType().equals(CheckerConstant.CHESS_TYPE_WHITE) || this.getCheckerType().startsWith("K")) {
 
-        //check white
-        if (this.getCheckerType().equals(CheckerConstant.CHESS_TYPE_WHITE) || this.getCheckerType().startsWith("K")) {
+                // check right
+                if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y + 1][x + 1])) {
+                    if (x + 2 < BoardConstant.N && (y + 2 >= 0 && y + 2 < BoardConstant.N)) {
+                        if (board.getBoardStates()[y + 2][x + 2].equals("1"))
+                            result.add(new Position(x + 2, y + 2, true));
+                    }
+                }
 
-            // check right
-            if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y + 1][x + 1])) {
-                if (x + 2 < BoardConstant.N && (y + 2 >= 0 && y + 2 < BoardConstant.N)) {
-                    if (board.getBoardStates()[y + 2][x + 2].equals("1"))
-                        result.add(new Position(x + 2, y + 2, true));
+                // check left
+                if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y + 1][x - 1])) {
+                    if (x - 2 >= 0 && (y + 2 >= 0 && y + 2 < BoardConstant.N)) {
+                        if (board.getBoardStates()[y + 2][x - 2].equals("1"))
+                            result.add(new Position(x - 2, y + 2, true));
+                    }
                 }
             }
+            //check black
+            if (this.getCheckerType().equals(CheckerConstant.CHESS_TYPE_BLACK) || this.getCheckerType().startsWith("K")) {
 
-            // check left
-            if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y + 1][x - 1])) {
-                if (x - 2 >= 0 && (y + 2 >= 0 && y + 2 < BoardConstant.N)) {
-                    if (board.getBoardStates()[y + 2][x - 2].equals("1"))
-                        result.add(new Position(x - 2, y + 2, true));
+                // check right
+                if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y - 1][x + 1])) {
+                    if (x + 2 < BoardConstant.N && (y - 2 >= 0 && y - 2 < BoardConstant.N)) {
+                        if (board.getBoardStates()[y - 2][x + 2].equals("1"))
+                            result.add(new Position(x + 2, y - 2, true));
+                    }
                 }
-            }
-        }
-        //check black
-        if (this.getCheckerType().equals(CheckerConstant.CHESS_TYPE_BLACK) || this.getCheckerType().startsWith("K")) {
 
-            // check right
-            if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y - 1][x + 1])) {
-                if (x + 2 < BoardConstant.N && (y - 2 >= 0 && y - 2 < BoardConstant.N)) {
-                    if (board.getBoardStates()[y - 2][x + 2].equals("1"))
-                        result.add(new Position(x + 2, y - 2, true));
-                }
-            }
-
-            // check left
-            if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y - 1][x - 1])) {
-                if (x - 2 >= 0 && (y - 2 >= 0 && y - 2 < BoardConstant.N)) {
-                    if (board.getBoardStates()[y - 2][x - 2].equals("1"))
-                        result.add(new Position(x - 2, y - 2, true));
+                // check left
+                if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y - 1][x - 1])) {
+                    if (x - 2 >= 0 && (y - 2 >= 0 && y - 2 < BoardConstant.N)) {
+                        if (board.getBoardStates()[y - 2][x - 2].equals("1"))
+                            result.add(new Position(x - 2, y - 2, true));
+                    }
                 }
             }
         }
