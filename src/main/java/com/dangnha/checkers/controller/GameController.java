@@ -1,6 +1,7 @@
 package com.dangnha.checkers.controller;
 
 import com.dangnha.checkers.constants.GameState;
+import com.dangnha.checkers.model.AI;
 import com.dangnha.checkers.model.CheckerBoard;
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
@@ -12,10 +13,11 @@ public class GameController {
 
     private static GameController instance;
     private boolean isBlackTurn;
+    private AI ai;
 
     private GameController() {
-        isBlackTurn = true;
         this.checkerBoardController = CheckerBoardController.getInstance();
+        ai = AI.getInstance();
     }
 
     public static GameController getInstance() {
@@ -27,31 +29,34 @@ public class GameController {
     public void initGame() {
         CheckerBoard newGameBoard = new CheckerBoard();
         this.checkerBoardController.setCheckerBoard(newGameBoard);
-        startGame(false);
+        startGame(true);
     }
 
     public void startGame(boolean isAI) {
-//        checkerBoardController.grantTeamEventHandler(true);
-//        checkerBoardController.grantTeamEventHandler(false);
-
-//        while (checkGameOver()) {
-//            if (isBlackTurn) {
-//                checkerBoardController.grantTeamEventHandler(true);
-//                isBlackTurn = false;
-//            } else {
-//                checkerBoardController.grantTeamEventHandler(false);
-//                isBlackTurn = true;
-//            }
-//
-//        }
-
+        isBlackTurn = true;
         AnimationTimer gameLoop = new AnimationTimer() {
 //            boolean isBlackTurn = true;
 
             @Override
             public void handle(long now) {
                 if (!checkGameOver())
-                    if (isBlackTurn) {
+                    if (isAI) {
+                        if (isBlackTurn) {
+                            CheckerBoard bestMove = ai.findBestMove(4, checkerBoardController.getCheckerBoard());
+                            checkerBoardController.setCheckerBoard(bestMove);
+                            isBlackTurn = false;
+                            checkerBoardController.getCheckerBoard().setBlackTurnModel(isBlackTurn);
+                        } else {
+                            checkerBoardController.grantTeamEventHandler(false);
+                            // remove event handler after clicked 1s
+                            PauseTransition pause = new PauseTransition(Duration.seconds(30));
+                            pause.setOnFinished(event -> {
+                                checkerBoardController.removeTeamEventHandler(false);
+                            });
+                            pause.play();
+                        }
+
+                    } else if (isBlackTurn) {
                         checkerBoardController.grantTeamEventHandler(true);
                         // remove event handler after clicked 1s
                         PauseTransition pause = new PauseTransition(Duration.seconds(30));
@@ -59,7 +64,7 @@ public class GameController {
                             checkerBoardController.removeTeamEventHandler(true);
                         });
                         pause.play();
-//                        isBlackTurn = false;
+
 
                     } else {
                         checkerBoardController.grantTeamEventHandler(false);
@@ -69,8 +74,10 @@ public class GameController {
                             checkerBoardController.removeTeamEventHandler(false);
                         });
                         pause.play();
-//                        isBlackTurn = true;
                     }
+                else {
+                    stopGame(this);
+                }
             }
         };
 
@@ -93,6 +100,11 @@ public class GameController {
             return true;
         }
         return false;
+    }
+
+    public void stopGame(AnimationTimer gameLoop) {
+        gameLoop.stop();
+        this.initGame();
     }
 
     public boolean isBlackTurn() {

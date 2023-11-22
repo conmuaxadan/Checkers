@@ -137,4 +137,8 @@ public class CheckerBoardController {
     public void setNewCheckerPos(Position newCheckerPos) {
         this.newCheckerPos = newCheckerPos;
     }
+
+    public CheckerBoard getCheckerBoard() {
+        return checkerBoard;
+    }
 }

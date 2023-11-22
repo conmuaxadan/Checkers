@@ -5,6 +5,7 @@ import com.dangnha.checkers.constants.CheckerConstant;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class CheckerBoard {
@@ -224,7 +225,7 @@ public class CheckerBoard {
             }
 
             if (checker.checkerType.equals(CheckerConstant.CHESS_TYPE_BLACK) && y == makeKingY) {
-                newChecker = new KingChecker(CheckerConstant.CHESS_TYPE_BLACK, currentPos);
+                newChecker = new KingChecker(CheckerConstant.CHESS_TYPE_KING_BLACK, currentPos);
                 this.checkerList.remove(checker);
                 this.checkerList.add(newChecker);
             }
@@ -282,6 +283,18 @@ public class CheckerBoard {
         return (-blackPieces + whitePieces) + (-blackKings * 5 + whiteKings * 5) + (-countAttackPosBlack * 2 + countAttackPosWhite * 2);
     }
 
+    /**
+     * Generate neighbours and heuristic value for each neighbour
+     * @return HashMap<Integer, CheckerBoard>
+     */
+    public HashMap<Integer, CheckerBoard> getHeuristicMap() {
+        HashMap<Integer, CheckerBoard> result = new HashMap<>();
+        for (CheckerBoard neighbour : generateNeighbours()) {
+            int heuristic = neighbour.heuristic();
+            result.put(heuristic, neighbour);
+        }
+        return result;
+    }
 
     public void setBoardStates(String[][] boardStates) {
         this.boardStates = boardStates;
@@ -320,6 +333,10 @@ public class CheckerBoard {
 //        Checker checker = board.findCheckerByPosition(1, 2);
 //        System.out.println(checker.getValidPositions(board));
 
-        System.out.println(board.generateNeighbours());
+//        System.out.println(board.generateNeighbours());
+
+        AI ai = AI.getInstance();
+        System.out.println(ai.minimax(14, true, board));
     }
+
 }
