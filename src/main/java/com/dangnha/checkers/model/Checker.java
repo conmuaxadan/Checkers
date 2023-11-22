@@ -7,7 +7,7 @@ import com.dangnha.checkers.utils.CheckerUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Checker {
+public abstract class Checker implements Cloneable {
     protected String checkerType;
     protected Position position;
     protected String iconLink;
@@ -32,6 +32,9 @@ public abstract class Checker {
         }
         return false;
     }
+
+    @Override
+    protected abstract Object clone() throws CloneNotSupportedException;
 
     public abstract List<Position> getValidPositions(CheckerBoard board);
 
@@ -105,7 +108,6 @@ public abstract class Checker {
                             else
                                 result.addAll(hasMultipleMoves(rightPos + 1, aheadPosIfCan, board));
                         }
-
                 }
             }
         }
@@ -113,47 +115,55 @@ public abstract class Checker {
 
     private List<Position> hasMultipleMoves(int x, int y, CheckerBoard board) {
         List<Position> result = new ArrayList<>();
-        result.add(new Position(x, y, true));
-        if (x > 0 && x < BoardConstant.N - 1 && y > 0 && y < BoardConstant.N - 1) {
-            //check white
-            if (this.getCheckerType().equals(CheckerConstant.CHESS_TYPE_WHITE) || this.getCheckerType().startsWith("K")) {
-
-                // check right
-                if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y + 1][x + 1])) {
-                    if (x + 2 < BoardConstant.N && (y + 2 >= 0 && y + 2 < BoardConstant.N)) {
-                        if (board.getBoardStates()[y + 2][x + 2].equals("1"))
-                            result.add(new Position(x + 2, y + 2, true));
-                    }
-                }
-
-                // check left
-                if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y + 1][x - 1])) {
-                    if (x - 2 >= 0 && (y + 2 >= 0 && y + 2 < BoardConstant.N)) {
-                        if (board.getBoardStates()[y + 2][x - 2].equals("1"))
-                            result.add(new Position(x - 2, y + 2, true));
-                    }
-                }
-            }
-            //check black
-            if (this.getCheckerType().equals(CheckerConstant.CHESS_TYPE_BLACK) || this.getCheckerType().startsWith("K")) {
-
-                // check right
-                if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y - 1][x + 1])) {
-                    if (x + 2 < BoardConstant.N && (y - 2 >= 0 && y - 2 < BoardConstant.N)) {
-                        if (board.getBoardStates()[y - 2][x + 2].equals("1"))
-                            result.add(new Position(x + 2, y - 2, true));
-                    }
-                }
-
-                // check left
-                if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y - 1][x - 1])) {
-                    if (x - 2 >= 0 && (y - 2 >= 0 && y - 2 < BoardConstant.N)) {
-                        if (board.getBoardStates()[y - 2][x - 2].equals("1"))
-                            result.add(new Position(x - 2, y - 2, true));
-                    }
-                }
-            }
-        }
+//        result.add(new Position(x, y, true));
+//        if (x > 0 && x < BoardConstant.N - 1 && y > 0 && y < BoardConstant.N - 1) {
+//            //check white
+//            if (this.getCheckerType().equals(CheckerConstant.CHESS_TYPE_WHITE) || this.getCheckerType().startsWith("K")) {
+//
+//                // check right
+//                if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y + 1][x + 1])) {
+//                    if (x + 2 < BoardConstant.N && (y + 2 >= 0 && y + 2 < BoardConstant.N)) {
+//                        if (board.getBoardStates()[y + 2][x + 2].equals("1"))
+//                            result.add(new Position(x + 2, y + 2, true));
+//                    }
+//                }
+//
+//                // check left
+//                if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y + 1][x - 1])) {
+//                    if (x - 2 >= 0 && (y + 2 >= 0 && y + 2 < BoardConstant.N)) {
+//                        if (board.getBoardStates()[y + 2][x - 2].equals("1"))
+//                            result.add(new Position(x - 2, y + 2, true));
+//                    }
+//                }
+//            }
+//            //check black
+//            if (this.getCheckerType().equals(CheckerConstant.CHESS_TYPE_BLACK) || this.getCheckerType().startsWith("K")) {
+//
+//                // check right
+//                if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y - 1][x + 1])) {
+//                    if (x + 2 < BoardConstant.N && (y - 2 >= 0 && y - 2 < BoardConstant.N)) {
+//                        if (board.getBoardStates()[y - 2][x + 2].equals("1"))
+//                            result.add(new Position(x + 2, y - 2, true));
+//                    }
+//                }
+//
+//                // check left
+//                if (CheckerUtils.isOpponent(this.checkerType, board.getBoardStates()[y - 1][x - 1])) {
+//                    if (x - 2 >= 0 && (y - 2 >= 0 && y - 2 < BoardConstant.N)) {
+//                        if (board.getBoardStates()[y - 2][x - 2].equals("1"))
+//                            result.add(new Position(x - 2, y - 2, true));
+//                    }
+//                }
+//            }
+//        }
         return result;
+    }
+
+    public boolean isValidTurn(boolean blackTurnModel) {
+        if(checkerType.endsWith(CheckerConstant.CHESS_TYPE_WHITE) && !blackTurnModel)
+            return true;
+        if(checkerType.endsWith(CheckerConstant.CHESS_TYPE_BLACK) && blackTurnModel)
+            return true;
+        else return false;
     }
 }

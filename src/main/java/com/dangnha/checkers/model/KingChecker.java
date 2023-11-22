@@ -16,6 +16,12 @@ public class KingChecker extends Checker {
     }
 
     @Override
+    protected Object clone() throws CloneNotSupportedException {
+        KingChecker newInstance = new KingChecker(this.checkerType, new Position(position.getX(), position.getY()));
+        return newInstance;
+    }
+
+    @Override
     public List<Position> getValidPositions(CheckerBoard board) {
         List<Position> result = new ArrayList<>();
 
@@ -29,7 +35,7 @@ public class KingChecker extends Checker {
     /**
      * Check valid positions in the bottom for the king
      *
-     * @param board is the current checker board
+     * @param board is the current checkerboard
      * @return a list of positions that valid for king in the top
      */
     private List<Position> getValidPosInTheTop(CheckerBoard board) {

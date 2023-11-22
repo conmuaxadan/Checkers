@@ -1,6 +1,7 @@
 package com.dangnha.checkers.eventsHandler;
 
 import com.dangnha.checkers.controller.CheckerBoardController;
+import com.dangnha.checkers.controller.GameController;
 import com.dangnha.checkers.model.Position;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -25,13 +26,17 @@ public class CheckerPaneCellEventHandler implements EventHandler<MouseEvent> {
 
         // place checker
         if (checkerBoardController.getCurrentCheckerPos() != null) {
-            checkerBoardController.placeChecker(checkerBoardController.getCurrentCheckerPos(), checkerBoardController.getNewCheckerPos());
+            boolean placeCheckerSuccess = checkerBoardController.placeChecker(checkerBoardController.getCurrentCheckerPos(), checkerBoardController.getNewCheckerPos());
 
+            // reset position after move
             checkerBoardController.setCurrentCheckerPos(null);
             checkerBoardController.setNewCheckerPos(null);
 
+            if (placeCheckerSuccess) {
+                GameController instance = GameController.getInstance();
+                instance.setBlackTurn(!instance.isBlackTurn());
+                checkerBoardController.setCheckBoardModelTurn(instance.isBlackTurn());
+            }
         }
-
     }
-
 }

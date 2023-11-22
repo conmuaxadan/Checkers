@@ -14,12 +14,18 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CheckerBoardView extends GridPane {
     private static CheckerBoardView instance;
+    private final List<Button> checkerButtonList;
+    private CheckerButtonEventHandler buttonEventHandler;
 
     private CheckerBoardView() {
+        checkerButtonList = new ArrayList<>();
         this.addEventHandler(MouseEvent.MOUSE_CLICKED, new CheckerPaneCellEventHandler());
+        buttonEventHandler = new CheckerButtonEventHandler();
     }
 
     public static CheckerBoardView getInstance() {
@@ -89,10 +95,13 @@ public class CheckerBoardView extends GridPane {
         }
     }
 
+    /**
+     * Create empty checker box to help get position of new position
+     */
     private Pane createCheckerBox() {
-        RowConstraints rowConstraints = new RowConstraints(BoardConstant.CELL_WIDTH);
+        RowConstraints rowConstraints = new RowConstraints(BoardConstant.CELL_HEIGHT);
         this.getRowConstraints().add(rowConstraints);
-        ColumnConstraints columnConstraints = new ColumnConstraints(BoardConstant.CELL_HEIGHT);
+        ColumnConstraints columnConstraints = new ColumnConstraints(BoardConstant.CELL_WIDTH);
         this.getColumnConstraints().add(columnConstraints);
 
         Pane darkCell = new Pane();
@@ -101,6 +110,9 @@ public class CheckerBoardView extends GridPane {
         return darkCell;
     }
 
+    /**
+     * Create checker button, checker button is a children of HBox
+     */
     private Button createCheckerButton(Checker checker) {
         try {
             String iconLink = new File(checker.getIconLink()).toURI().toString();
@@ -113,8 +125,13 @@ public class CheckerBoardView extends GridPane {
             Button checkerButton = new Button();
             checkerButton.setGraphic(imgView);
 
-            checkerButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new CheckerButtonEventHandler());
             checkerButton.getStyleClass().add("checker-button");
+            if (checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_BLACK))
+                checkerButton.getStyleClass().add("black");
+            else
+                checkerButton.getStyleClass().add("white");
+
+            checkerButtonList.add(checkerButton);
 
             return checkerButton;
         } catch (NullPointerException e) {
@@ -124,14 +141,46 @@ public class CheckerBoardView extends GridPane {
         return null;
     }
 
+    /**
+     * Highlight cell to display available moves
+     *
+     * @param x is the col of the cell (in GridPane)
+     * @param y is the row of the cell (in GridPane)
+     */
     public void highlightCell(int x, int y) {
         for (Node node : this.getChildren()) {
             if (GridPane.getColumnIndex(node) == x && GridPane.getRowIndex(node) == y) {
                 node.getStyleClass().add("highlight-cell");
             }
-
         }
     }
+
+    /**
+     * This method grant for each team add event handler for its checker to move the checker
+     * <br> (using for human player only)
+     */
+    public void grantTeamEventHandler(boolean isBlackTeam) {
+        String team = isBlackTeam ? "black" : "white";
+        for (Button checkerButton : this.checkerButtonList) {
+            if (checkerButton.getStyleClass().contains(team)) {
+                checkerButton.addEventHandler(MouseEvent.MOUSE_CLICKED, buttonEventHandler);
+            }
+        }
+    }
+
+    /**
+     * Remove event handler for each element (checker buttons)
+     * @param isBlackTeam determines if black checker buttons or white checker buttons
+     */
+    public void removeTeamEventHandler(boolean isBlackTeam) {
+        String team = isBlackTeam ? "black" : "white";
+        for (Button checkerButton : this.checkerButtonList) {
+            if (checkerButton.getStyleClass().contains(team)) {
+                checkerButton.removeEventHandler(MouseEvent.MOUSE_CLICKED, buttonEventHandler);
+            }
+        }
+    }
+
 
 }
 

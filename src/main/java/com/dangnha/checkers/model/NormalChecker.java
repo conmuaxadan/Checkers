@@ -16,17 +16,23 @@ public class NormalChecker extends Checker {
     }
 
     @Override
+    protected Object clone() throws CloneNotSupportedException {
+        NormalChecker newInstance = new NormalChecker(this.checkerType, new Position(position.getX(), position.getY()));
+        return newInstance;
+    }
+
+    @Override
     public List<Position> getValidPositions(CheckerBoard board) {
         List<Position> result = new ArrayList<>();
 
         int aheadPos = 0, aheadPosIfCan = 0, leftPos, rightPos;
-        if (this.checkerType.equals(CheckerConstant.CHESS_TYPE_WHITE)) {
+        if (this.checkerType.equals(CheckerConstant.CHESS_TYPE_BLACK)) {
             aheadPos = this.position.getY() + 1;
             if (aheadPos == BoardConstant.N)
                 return null;
             aheadPosIfCan = aheadPos + 1;
         }
-        if (this.checkerType.equals(CheckerConstant.CHESS_TYPE_BLACK)) {
+        if (this.checkerType.equals(CheckerConstant.CHESS_TYPE_WHITE)) {
             aheadPos = this.position.getY() - 1;
             if (aheadPos < 0)
                 return null;
