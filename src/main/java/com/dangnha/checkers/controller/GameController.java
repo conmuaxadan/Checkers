@@ -42,14 +42,14 @@ public class GameController {
                 if (!checkGameOver())
                     if (isAI) {
                         if (isBlackTurn) {
-                            CheckerBoard bestMove = ai.findBestMove(4, checkerBoardController.getCheckerBoard());
+                            CheckerBoard bestMove = ai.findBestMove(3, checkerBoardController.getCheckerBoard());
                             checkerBoardController.setCheckerBoard(bestMove);
                             isBlackTurn = false;
                             checkerBoardController.getCheckerBoard().setBlackTurnModel(isBlackTurn);
                         } else {
                             checkerBoardController.grantTeamEventHandler(false);
                             // remove event handler after clicked 1s
-                            PauseTransition pause = new PauseTransition(Duration.seconds(30));
+                            PauseTransition pause = new PauseTransition(Duration.seconds(1));
                             pause.setOnFinished(event -> {
                                 checkerBoardController.removeTeamEventHandler(false);
                             });
@@ -88,14 +88,23 @@ public class GameController {
     private boolean checkGameOver() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         if (checkerBoardController.gameOver().equals(GameState.BLACK_LOSE)) {
-            alert.setHeaderText("Game over");
-            alert.setContentText("Black was lose!!");
+            alert.setTitle("Checkers!");
+            alert.setHeaderText("Game Over");
+            alert.setContentText("Black was lose!! Try again?");
             alert.show();
             return true;
         }
         if (checkerBoardController.gameOver().equals(GameState.WHITE_LOSE)) {
-            alert.setHeaderText("Game over");
-            alert.setContentText("White was lose!!");
+            alert.setTitle("Checkers!");
+            alert.setHeaderText("Game Over");
+            alert.setContentText("White was lose!! Try again?");
+            alert.show();
+            return true;
+        }
+        if (checkerBoardController.gameOver().equals(GameState.DRAW)) {
+            alert.setTitle("Checkers!");
+            alert.setHeaderText("Game Over");
+            alert.setContentText("You was draw with opponent!! Try again?");
             alert.show();
             return true;
         }

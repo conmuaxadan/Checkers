@@ -37,7 +37,7 @@ public class CheckerBoard {
             this.boardStates = new String[BoardConstant.N][BoardConstant.N];
             this.checkerList = new ArrayList<>();
 
-            for(Checker checker : checkerList) {
+            for (Checker checker : checkerList) {
                 this.checkerList.add((Checker) checker.clone());
             }
 
@@ -60,15 +60,13 @@ public class CheckerBoard {
             for (int j = 0; j < BoardConstant.N; j++) {
                 // even rows
                 if (i % 2 == 0) {
-                    if (j % 2 == 0)
-                        cellState = 0;
+                    if (j % 2 == 0) cellState = 0;
                     else cellState = 1;
                 }
 
                 // odd rows
                 if (i % 2 != 0) {
-                    if (j % 2 == 0)
-                        cellState = 1;
+                    if (j % 2 == 0) cellState = 1;
                     else cellState = 0;
                 }
 
@@ -125,8 +123,7 @@ public class CheckerBoard {
      */
     public void refreshBoard() {
         generateBoard();
-        for (Checker checker : checkerList
-        ) {
+        for (Checker checker : checkerList) {
             this.boardStates[checker.getPosition().getY()][checker.getPosition().getX()] = checker.checkerType;
         }
     }
@@ -139,10 +136,8 @@ public class CheckerBoard {
      * @return Checker
      */
     public Checker findCheckerByPosition(int x, int y) {
-        for (Checker checker : checkerList
-        ) {
-            if (checker.position.getX() == x && checker.position.getY() == y)
-                return checker;
+        for (Checker checker : checkerList) {
+            if (checker.position.getX() == x && checker.position.getY() == y) return checker;
         }
         return null;
     }
@@ -207,14 +202,11 @@ public class CheckerBoard {
      */
     public void makeKingChecker(int x, int y) {
         Checker checker = findCheckerByPosition(x, y);
-        if (checker == null)
-            return;
+        if (checker == null) return;
         else {
             int makeKingY = -1;
-            if (checker.checkerType.equals(CheckerConstant.CHESS_TYPE_BLACK))
-                makeKingY = BoardConstant.N - 1;
-            if (checker.checkerType.equals(CheckerConstant.CHESS_TYPE_WHITE))
-                makeKingY = 0;
+            if (checker.checkerType.equals(CheckerConstant.CHESS_TYPE_BLACK)) makeKingY = BoardConstant.N - 1;
+            if (checker.checkerType.equals(CheckerConstant.CHESS_TYPE_WHITE)) makeKingY = 0;
 
             Position currentPos = checker.getPosition();
             Checker newChecker = null;
@@ -240,7 +232,7 @@ public class CheckerBoard {
         CheckerBoard neighbour = null;
         CheckerBoard checkerBoardClone = new CheckerBoard(this.boardStates, this.checkerList);
         for (Checker checker : checkerBoardClone.checkerList) {
-            if(checker.isValidTurn(isBlackTurnModel())) {
+            if (checker.isValidTurn(isBlackTurnModel())) {
                 for (Position pos : checker.getValidPositions(checkerBoardClone)) {
                     checkerBoardClone = new CheckerBoard(this.boardStates, this.checkerList);
                     neighbour = new CheckerBoard(checkerBoardClone.boardStates, checkerBoardClone.checkerList);
@@ -263,10 +255,8 @@ public class CheckerBoard {
         int countAttackPosWhite = 0;
         for (Checker checker : checkerList) {
             if (checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_WHITE)) {
-                for (Position validPos : checker.getValidPositions(this)
-                ) {
-                    if (validPos.isAttackPos())
-                        countAttackPosWhite++;
+                for (Position validPos : checker.getValidPositions(this)) {
+                    if (validPos.isAttackPos()) countAttackPosWhite++;
                 }
             }
         }
@@ -275,16 +265,32 @@ public class CheckerBoard {
         for (Checker checker : checkerList) {
             if (checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_BLACK)) {
                 for (Position validPos : checker.getValidPositions(this))
-                    if (validPos.isAttackPos())
-                        countAttackPosBlack++;
+                    if (validPos.isAttackPos()) countAttackPosBlack++;
             }
         }
 
-        return (-blackPieces + whitePieces) + (-blackKings * 5 + whiteKings * 5) + (-countAttackPosBlack * 2 + countAttackPosWhite * 2);
+        int countWhiteCheckersNearKingY = 0;
+        int countBlackCheckersNearKingY = 0;
+
+        for (Checker checker : checkerList) {
+            if (checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_WHITE)) {
+                // checker nears position to make king (WHITE -> makeKingY = 0; BLACK -> makeKingY = n - 1)
+                if (checker.getPosition().getY() == 1 || checker.getPosition().getY() == 2)
+                    countWhiteCheckersNearKingY++;
+            }
+            if (checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_BLACK)) {
+                // checker nears position to make king (WHITE -> makeKingY = 0; BLACK -> makeKingY = n - 1)
+                if (checker.getPosition().getY() == BoardConstant.N - 1 || checker.getPosition().getY() == BoardConstant.N - 2)
+                    countBlackCheckersNearKingY++;
+            }
+        }
+
+        return (blackPieces - whitePieces) + (blackKings * 5 - whiteKings * 5) + (countAttackPosBlack * 2 - countAttackPosWhite * 2) + (countBlackCheckersNearKingY - countWhiteCheckersNearKingY);
     }
 
     /**
      * Generate neighbours and heuristic value for each neighbour
+     *
      * @return HashMap<Integer, CheckerBoard>
      */
     public HashMap<Integer, CheckerBoard> getHeuristicMap() {
@@ -312,8 +318,7 @@ public class CheckerBoard {
     public String toString() {
         String result = "";
 
-        for (String[] row : this.boardStates
-        ) {
+        for (String[] row : this.boardStates) {
             result += Arrays.toString(row) + "\n";
         }
         return result;

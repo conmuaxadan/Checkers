@@ -28,7 +28,6 @@ public class AI {
             for (CheckerBoard neighbour : board.generateNeighbours()) {
                 int value = minimax(depth - 1, true, neighbour);
                 bestValue = Math.min(bestValue, value);
-                System.out.println("MinPlayer: " + value);
             }
             return bestValue;
         }
