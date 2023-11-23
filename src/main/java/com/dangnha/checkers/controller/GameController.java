@@ -1,5 +1,6 @@
 package com.dangnha.checkers.controller;
 
+import com.dangnha.checkers.constants.GameDifficult;
 import com.dangnha.checkers.constants.GameState;
 import com.dangnha.checkers.model.AI;
 import com.dangnha.checkers.model.CheckerBoard;
@@ -9,6 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.util.Duration;
 
 public class GameController {
+    private GameDifficult gameDifficult;
     private CheckerBoardController checkerBoardController;
 
     private static GameController instance;
@@ -26,13 +28,14 @@ public class GameController {
         return instance;
     }
 
-    public void initGame() {
+    public void initGame(GameDifficult gameDifficult) {
+        this.gameDifficult = gameDifficult;
         CheckerBoard newGameBoard = new CheckerBoard();
         this.checkerBoardController.setCheckerBoard(newGameBoard);
-        startGame(true);
+        startGame(true, gameDifficult);
     }
 
-    public void startGame(boolean isAI) {
+    public void startGame(boolean isAI, GameDifficult gameDifficult) {
         isBlackTurn = true;
         AnimationTimer gameLoop = new AnimationTimer() {
 //            boolean isBlackTurn = true;
@@ -42,7 +45,7 @@ public class GameController {
                 if (!checkGameOver())
                     if (isAI) {
                         if (isBlackTurn) {
-                            CheckerBoard bestMove = ai.findBestMove(3, checkerBoardController.getCheckerBoard());
+                            CheckerBoard bestMove = ai.getBestMove(checkerBoardController.getCheckerBoard(), gameDifficult);
                             checkerBoardController.setCheckerBoard(bestMove);
                             isBlackTurn = false;
                             checkerBoardController.getCheckerBoard().setBlackTurnModel(isBlackTurn);
@@ -113,7 +116,7 @@ public class GameController {
 
     public void stopGame(AnimationTimer gameLoop) {
         gameLoop.stop();
-        this.initGame();
+        this.initGame(this.gameDifficult);
     }
 
     public boolean isBlackTurn() {

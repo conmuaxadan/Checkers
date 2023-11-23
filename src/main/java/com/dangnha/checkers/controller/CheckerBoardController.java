@@ -81,41 +81,7 @@ public class CheckerBoardController {
     }
 
     public GameState gameOver() {
-        int countAvailableMoveBlack = Integer.MIN_VALUE;
-        for (Checker checker : checkerBoard.getCheckerList()
-        ) {
-            if (checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_BLACK) && checker.getValidPositions(checkerBoard) != null) {
-                countAvailableMoveBlack += checker.getValidPositions(checkerBoard).size();
-            }
-        }
-
-        int countAvailableMoveWhite = Integer.MIN_VALUE;
-        for (Checker checker : checkerBoard.getCheckerList()
-        ) {
-            if (checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_WHITE) && checker.getValidPositions(checkerBoard) != null) {
-                countAvailableMoveWhite += checker.getValidPositions(checkerBoard).size();
-            }
-        }
-
-        int countBlack = (int) checkerBoard.getCheckerList().stream().filter(checker -> checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_BLACK)).count();
-        int countWhite = (int) checkerBoard.getCheckerList().stream().filter(checker -> checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_WHITE)).count();
-
-        if (countWhite == 0)
-            return GameState.WHITE_LOSE;
-
-        if (countBlack == 0)
-            return GameState.BLACK_LOSE;
-
-        if (countAvailableMoveBlack == 0 && countAvailableMoveWhite > 0)
-            return GameState.BLACK_LOSE;
-
-        if (countAvailableMoveWhite == 0 && countAvailableMoveBlack > 0)
-            return GameState.WHITE_LOSE;
-
-        if (countAvailableMoveWhite == 0 && countAvailableMoveBlack == 0)
-            return GameState.DRAW;
-
-        return GameState.CONTINUE;
+        return this.checkerBoard.gameOver();
     }
 
     public void setCheckBoardModelTurn(boolean isBlackTurn) {

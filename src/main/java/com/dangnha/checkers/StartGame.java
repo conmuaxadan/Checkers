@@ -1,5 +1,6 @@
 package com.dangnha.checkers;
 
+import com.dangnha.checkers.constants.GameDifficult;
 import com.dangnha.checkers.controller.GameController;
 import com.dangnha.checkers.view.CheckerBoardView;
 import javafx.application.Application;
@@ -14,7 +15,7 @@ public class StartGame extends Application {
         String cssFile = this.getClass().getResource("/css/style.css").toExternalForm();
 
         GameController gameController = GameController.getInstance();
-        gameController.initGame();
+        gameController.initGame(GameDifficult.MEDIUM);
         Scene scene = new Scene(CheckerBoardView.getInstance(), 475, 475);
         stage.setResizable(false);
         scene.getStylesheets().add(cssFile);

@@ -2,6 +2,7 @@ package com.dangnha.checkers.model;
 
 import com.dangnha.checkers.constants.BoardConstant;
 import com.dangnha.checkers.constants.CheckerConstant;
+import com.dangnha.checkers.constants.GameState;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -246,6 +247,10 @@ public class CheckerBoard {
     }
 
     public int heuristic() {
+        int result = Integer.MIN_VALUE;
+
+        // count normal pieces and king pieces (checkers) for each team
+        // if you want to increase priority attack of checkers, you should increase point of it
         int blackPieces = (int) checkerList.stream().filter(checker -> checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_BLACK)).count();
         int blackKings = (int) checkerList.stream().filter(checker -> checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_KING_BLACK)).count();
 
@@ -285,7 +290,16 @@ public class CheckerBoard {
             }
         }
 
-        return (blackPieces - whitePieces) + (blackKings * 5 - whiteKings * 5) + (countAttackPosBlack * 2 - countAttackPosWhite * 2) + (countBlackCheckersNearKingY - countWhiteCheckersNearKingY);
+        // if black have at least one king and white has smaller kings than black then priority attack
+        if (blackKings >= 1 && whiteKings <= blackKings) {
+            result = 10 * (blackPieces - whitePieces) + 3 * (blackKings - whiteKings) + 4 * (countAttackPosBlack - countAttackPosWhite)
+                    + 2 * (countBlackCheckersNearKingY - countWhiteCheckersNearKingY);
+        } else {
+            result = 8 * (blackPieces - whitePieces) + 5 * (blackKings - whiteKings) + 4 * (countAttackPosBlack - countAttackPosWhite)
+                    + 3 * (countBlackCheckersNearKingY - countWhiteCheckersNearKingY);
+        }
+
+        return result;
     }
 
     /**
@@ -300,6 +314,47 @@ public class CheckerBoard {
             result.put(heuristic, neighbour);
         }
         return result;
+    }
+
+    /**
+     * Check states of the game. Ex: GAME_OVER, DRAW,...
+     */
+    public GameState gameOver() {
+        int countAvailableMoveBlack = Integer.MIN_VALUE;
+        for (Checker checker : this.getCheckerList()
+        ) {
+            if (checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_BLACK) && checker.getValidPositions(this) != null) {
+                countAvailableMoveBlack += checker.getValidPositions(this).size();
+            }
+        }
+
+        int countAvailableMoveWhite = Integer.MIN_VALUE;
+        for (Checker checker : this.getCheckerList()
+        ) {
+            if (checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_WHITE) && checker.getValidPositions(this) != null) {
+                countAvailableMoveWhite += checker.getValidPositions(this).size();
+            }
+        }
+
+        int countBlack = (int) this.getCheckerList().stream().filter(checker -> checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_BLACK)).count();
+        int countWhite = (int) this.getCheckerList().stream().filter(checker -> checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_WHITE)).count();
+
+        if (countWhite == 0)
+            return GameState.WHITE_LOSE;
+
+        if (countBlack == 0)
+            return GameState.BLACK_LOSE;
+
+        if (countAvailableMoveBlack == 0 && countAvailableMoveWhite > 0)
+            return GameState.BLACK_LOSE;
+
+        if (countAvailableMoveWhite == 0 && countAvailableMoveBlack > 0)
+            return GameState.WHITE_LOSE;
+
+        if (countAvailableMoveWhite == 0 && countAvailableMoveBlack == 0)
+            return GameState.DRAW;
+
+        return GameState.CONTINUE;
     }
 
     public void setBoardStates(String[][] boardStates) {
@@ -341,7 +396,7 @@ public class CheckerBoard {
 //        System.out.println(board.generateNeighbours());
 
         AI ai = AI.getInstance();
-        System.out.println(ai.minimax(14, true, board));
+//        System.out.println(ai.minimax(14, true, board));
     }
 
 }
