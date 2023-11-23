@@ -12,6 +12,7 @@ import javafx.util.Duration;
 public class GameController {
     private GameDifficult gameDifficult;
     private CheckerBoardController checkerBoardController;
+    private boolean isPlayWithAI;
 
     private static GameController instance;
     private boolean isBlackTurn;
@@ -37,6 +38,7 @@ public class GameController {
 
     public void startGame(boolean isAI, GameDifficult gameDifficult) {
         isBlackTurn = true;
+        PauseTransition pause = new PauseTransition();
         AnimationTimer gameLoop = new AnimationTimer() {
 //            boolean isBlackTurn = true;
 
@@ -45,14 +47,19 @@ public class GameController {
                 if (!checkGameOver())
                     if (isAI) {
                         if (isBlackTurn) {
-                            CheckerBoard bestMove = ai.getBestMove(checkerBoardController.getCheckerBoard(), gameDifficult);
-                            checkerBoardController.setCheckerBoard(bestMove);
-                            isBlackTurn = false;
-                            checkerBoardController.getCheckerBoard().setBlackTurnModel(isBlackTurn);
+                            // delay AI 1s to make view display when user (WHITE team) places checker
+                            pause.setDuration(Duration.seconds(1));
+                            pause.setOnFinished(event -> {
+                                CheckerBoard bestMove = ai.getBestMove(checkerBoardController.getCheckerBoard(), gameDifficult);
+                                checkerBoardController.setCheckerBoard(bestMove);
+                                isBlackTurn = false;
+                                checkerBoardController.getCheckerBoard().setBlackTurnModel(isBlackTurn);
+                            });
+                            pause.play();
                         } else {
                             checkerBoardController.grantTeamEventHandler(false);
-                            // remove event handler after clicked 1s
-                            PauseTransition pause = new PauseTransition(Duration.seconds(1));
+                            // remove event after 1s
+                            pause.setDuration(Duration.seconds(1));
                             pause.setOnFinished(event -> {
                                 checkerBoardController.removeTeamEventHandler(false);
                             });
@@ -79,6 +86,7 @@ public class GameController {
                         pause.play();
                     }
                 else {
+                    // stop game if game over!
                     stopGame(this);
                 }
             }
@@ -125,5 +133,13 @@ public class GameController {
 
     public void setBlackTurn(boolean blackTurn) {
         isBlackTurn = blackTurn;
+    }
+
+    public boolean isPlayWithAI() {
+        return isPlayWithAI;
+    }
+
+    public void setPlayWithAI(boolean playWithAI) {
+        isPlayWithAI = playWithAI;
     }
 }
