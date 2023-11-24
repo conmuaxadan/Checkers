@@ -12,14 +12,17 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dangnha.checkers.controller.CheckerGameController.java">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dangnha.checkers.controller.CheckerGameController">
    <children>
       <SplitPane layoutX="1.0" layoutY="3.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <items>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Pane fx:id="boardContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="480.0" />
+                  <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="480.0">
+                     <children>
+                        <VBox fx:id="boardContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="480.0" />
+                     </children>
+                  </Pane>
                   <Pane prefHeight="480.0" prefWidth="275.0" HBox.hgrow="ALWAYS">
                      <children>
                         <VBox alignment="TOP_CENTER" layoutX="1.0" prefHeight="480.0" prefWidth="268.0">
@@ -40,12 +43,11 @@
                               </HBox>
                               <VBox alignment="CENTER">
                                  <children>
-                                    <Label alignment="CENTER" prefHeight="17.0" prefWidth="268.0" text="Chọn độ khó" />
-                                    <MenuButton mnemonicParsing="false" text="Chọn độ khó">
+                                    <MenuButton fx:id="menuButtonDifficult" mnemonicParsing="false" text="Choose diffcult">
                                       <items>
-                                        <MenuItem mnemonicParsing="false" text="EASY" />
-                                        <MenuItem mnemonicParsing="false" text="MEDIUM" />
-                                          <MenuItem mnemonicParsing="false" text="EASY" />
+                                        <MenuItem mnemonicParsing="false" onAction="#handleDifficultClick" text="EASY" />
+                                        <MenuItem mnemonicParsing="false" onAction="#handleDifficultClick" text="MEDIUM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleDifficultClick" text="EASY" />
                                       </items>
                                     </MenuButton>
                                  </children>
