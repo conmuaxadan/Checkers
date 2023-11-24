@@ -47,7 +47,7 @@
                                       <items>
                                         <MenuItem mnemonicParsing="false" onAction="#handleDifficultClick" text="EASY" />
                                         <MenuItem mnemonicParsing="false" onAction="#handleDifficultClick" text="MEDIUM" />
-                                          <MenuItem mnemonicParsing="false" onAction="#handleDifficultClick" text="EASY" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleDifficultClick" text="HARD" />
                                       </items>
                                     </MenuButton>
                                  </children>
