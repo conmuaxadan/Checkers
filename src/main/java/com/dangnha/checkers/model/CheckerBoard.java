@@ -14,18 +14,7 @@ public class CheckerBoard {
     private List<Checker> checkerList;
     private boolean attackState;
 
-    private boolean isBlackTurnModel;
-
-    public boolean isBlackTurnModel() {
-        return isBlackTurnModel;
-    }
-
-    public void setBlackTurnModel(boolean blackTurnModel) {
-        isBlackTurnModel = blackTurnModel;
-    }
-
     public CheckerBoard() {
-        isBlackTurnModel = true;
         this.boardStates = new String[BoardConstant.N][BoardConstant.N];
         checkerList = new ArrayList<>();
         initBoard();
@@ -34,7 +23,6 @@ public class CheckerBoard {
 
     public CheckerBoard(String[][] boardStates, List<Checker> checkerList) {
         try {
-            isBlackTurnModel = true;
             this.boardStates = new String[BoardConstant.N][BoardConstant.N];
             this.checkerList = new ArrayList<>();
 

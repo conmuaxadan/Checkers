@@ -84,9 +84,6 @@ public class CheckerBoardController {
         return this.checkerBoard.gameOver();
     }
 
-    public void setCheckBoardModelTurn(boolean isBlackTurn) {
-        checkerBoard.setBlackTurnModel(isBlackTurn);
-    }
 
     public Position getCurrentCheckerPos() {
         return currentCheckerPos;

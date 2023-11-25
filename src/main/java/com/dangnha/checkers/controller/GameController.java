@@ -54,7 +54,6 @@ public class GameController {
                                 CheckerBoard bestMove = ai.getBestMove(checkerBoardController.getCheckerBoard(), gameDifficult);
                                 checkerBoardController.setCheckerBoard(bestMove);
                                 isBlackTurn = false;
-                                checkerBoardController.getCheckerBoard().setBlackTurnModel(isBlackTurn);
                             });
                             pause.play();
                         } else {

@@ -35,7 +35,6 @@ public class CheckerPaneCellEventHandler implements EventHandler<MouseEvent> {
             if (placeCheckerSuccess) {
                 GameController instance = GameController.getInstance();
                 instance.setBlackTurn(!instance.isBlackTurn());
-                checkerBoardController.setCheckBoardModelTurn(instance.isBlackTurn());
             }
         }
     }
