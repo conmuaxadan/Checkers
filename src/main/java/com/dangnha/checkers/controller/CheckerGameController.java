@@ -50,6 +50,10 @@ public class CheckerGameController implements Initializable {
         gameController.startGame();
     }
 
+    /**
+     * Change difficult of game from view via MenuButton
+     * @param event to get the clicked target
+     */
     @FXML
     protected void handleDifficultClick(ActionEvent event) {
         MenuItem selectedItem = (MenuItem) event.getTarget();
@@ -86,6 +90,9 @@ public class CheckerGameController implements Initializable {
         updateValueViaLoop();
     }
 
+    /**
+     * Loop via {@link AnimationTimer} to get value from {@link GameController} and set to view
+     */
     public void updateValueViaLoop() {
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
@@ -115,6 +122,5 @@ public class CheckerGameController implements Initializable {
             }
         };
         animationTimer.start();
-
     }
 }

@@ -154,19 +154,14 @@ public class CheckerBoard {
      * Place checker to the board
      */
     public boolean setCheckerPosition(Position currentPos, Position newPos) {
-
         int currentX = currentPos.getX();
         int currentY = currentPos.getY();
         int newX = newPos.getX();
         int newY = newPos.getY();
 
         Checker currentChecker = findCheckerByPosition(currentX, currentY);
-        System.out.println("current checker: " + currentChecker);
-        System.out.println("valid pos? " + currentChecker.isValid(newPos, this));
-        System.out.println("get valid pos: " + currentChecker.getValidPositions(this));
 
         if (currentChecker.isValid(newPos, this)) {
-
             // check if new pos is an attack pos
             if (currentChecker.isAttackPos(newPos, this)) {
                 int opponentX = (currentX + newX) / 2;
@@ -179,10 +174,10 @@ public class CheckerBoard {
 
             currentChecker.position.setX(newX);
             currentChecker.position.setY(newY);
-            System.out.println("checker placed!");
+
             // make king checker if possible
             makeKingChecker(newX, newY);
-//            refreshBoard();
+
             return true;
         }
         return false;
@@ -231,12 +226,10 @@ public class CheckerBoard {
         List<CheckerBoard> result = new ArrayList<>();
 
         CheckerBoard neighbour = null;
-        CheckerBoard checkerBoardClone = new CheckerBoard(this.boardStates, this.checkerList);
-        for (Checker checker : checkerBoardClone.checkerList) {
+        for (Checker checker : this.checkerList) {
             if (checker.isValidTurn(isBlackTurnModel())) {
-                for (Position pos : checker.getValidPositions(checkerBoardClone)) {
-                    checkerBoardClone = new CheckerBoard(this.boardStates, this.checkerList);
-                    neighbour = new CheckerBoard(checkerBoardClone.boardStates, checkerBoardClone.checkerList);
+                for (Position pos : checker.getValidPositions(this)) {
+                    neighbour = new CheckerBoard(this.boardStates, this.checkerList);
                     neighbour.setCheckerPosition(checker.position, pos);
                     result.add(neighbour);
                 }
@@ -393,7 +386,7 @@ public class CheckerBoard {
 //        Checker checker = board.findCheckerByPosition(1, 2);
 //        System.out.println(checker.getValidPositions(board));
 
-//        System.out.println(board.generateNeighbours());
+        System.out.println(board.generateNeighbours());
 
         AI ai = AI.getInstance();
 //        System.out.println(ai.minimax(14, true, board));
