@@ -222,12 +222,13 @@ public class CheckerBoard {
     }
 
 
-    public List<CheckerBoard> generateNeighbours() {
+    public List<CheckerBoard> generateNeighbours(boolean isBlackTurn) {
         List<CheckerBoard> result = new ArrayList<>();
 
         CheckerBoard neighbour = null;
-        for (Checker checker : this.checkerList) {
-            if (checker.isValidTurn(isBlackTurnModel())) {
+        CheckerBoard cloneBoard = new CheckerBoard(this.boardStates, this.checkerList);
+        for (Checker checker : cloneBoard.checkerList) {
+            if (checker.isValidTurn(isBlackTurn)) {
                 for (Position pos : checker.getValidPositions(this)) {
                     neighbour = new CheckerBoard(this.boardStates, this.checkerList);
                     neighbour.setCheckerPosition(checker.position, pos);
@@ -296,56 +297,42 @@ public class CheckerBoard {
     }
 
     /**
-     * Generate neighbours and heuristic value for each neighbour
-     *
-     * @return HashMap<Integer, CheckerBoard>
-     */
-    public HashMap<Integer, CheckerBoard> getHeuristicMap() {
-        HashMap<Integer, CheckerBoard> result = new HashMap<>();
-        for (CheckerBoard neighbour : generateNeighbours()) {
-            int heuristic = neighbour.heuristic();
-            result.put(heuristic, neighbour);
-        }
-        return result;
-    }
-
-    /**
      * Check states of the game. Ex: GAME_OVER, DRAW,...
      */
     public GameState gameOver() {
-        int countAvailableMoveBlack = Integer.MIN_VALUE;
+        int countAvailableMovesBlack = 0;
         for (Checker checker : this.getCheckerList()
         ) {
-            if (checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_BLACK) && checker.getValidPositions(this) != null) {
-                countAvailableMoveBlack += checker.getValidPositions(this).size();
+            if (checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_BLACK) && checker.getValidPositions(this) != null) {
+                countAvailableMovesBlack += checker.getValidPositions(this).size();
             }
         }
 
-        int countAvailableMoveWhite = Integer.MIN_VALUE;
+        int countAvailableMovesWhite = 0;
         for (Checker checker : this.getCheckerList()
         ) {
-            if (checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_WHITE) && checker.getValidPositions(this) != null) {
-                countAvailableMoveWhite += checker.getValidPositions(this).size();
+            if (checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_WHITE) && checker.getValidPositions(this) != null) {
+                countAvailableMovesWhite += checker.getValidPositions(this).size();
             }
         }
 
         int countBlack = (int) this.getCheckerList().stream().filter(checker -> checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_BLACK)).count();
         int countWhite = (int) this.getCheckerList().stream().filter(checker -> checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_WHITE)).count();
 
+        if (countAvailableMovesBlack == 0 && countAvailableMovesWhite > 0)
+            return GameState.BLACK_LOSE;
+
+        if (countAvailableMovesWhite == 0 && countAvailableMovesBlack > 0)
+            return GameState.WHITE_LOSE;
+
+        if (countAvailableMovesWhite == 0 && countAvailableMovesBlack == 0)
+            return GameState.DRAW;
+
         if (countWhite == 0)
             return GameState.WHITE_LOSE;
 
         if (countBlack == 0)
             return GameState.BLACK_LOSE;
-
-        if (countAvailableMoveBlack == 0 && countAvailableMoveWhite > 0)
-            return GameState.BLACK_LOSE;
-
-        if (countAvailableMoveWhite == 0 && countAvailableMoveBlack > 0)
-            return GameState.WHITE_LOSE;
-
-        if (countAvailableMoveWhite == 0 && countAvailableMoveBlack == 0)
-            return GameState.DRAW;
 
         return GameState.CONTINUE;
     }
@@ -386,7 +373,10 @@ public class CheckerBoard {
 //        Checker checker = board.findCheckerByPosition(1, 2);
 //        System.out.println(checker.getValidPositions(board));
 
-        System.out.println(board.generateNeighbours());
+        CheckerBoard n1 = board.generateNeighbours(true).get(0);
+
+        System.out.println(n1.generateNeighbours(false));
+
 
         AI ai = AI.getInstance();
 //        System.out.println(ai.minimax(14, true, board));

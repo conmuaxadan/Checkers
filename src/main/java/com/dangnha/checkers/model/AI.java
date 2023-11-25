@@ -28,12 +28,15 @@ public class AI {
             return board.heuristic();
         }
 
+        CheckerBoard cloneBoard = new CheckerBoard(board.getBoardStates(), board.getCheckerList());
+
         int value = Integer.MAX_VALUE;
-        for (CheckerBoard neighbour : board.generateNeighbours()) {
+        for (CheckerBoard neighbour : cloneBoard.generateNeighbours(false)) {
             value = Math.min(value, maxValue(neighbour, alpha, beta, depth - 1));
             if (alpha >= value) return value;
             beta = Math.min(beta, value);
         }
+//        System.out.println("min board: \n" + board + ", heuristic: " + board.heuristic() + ", depth: " + depth + "\n");
         return value;
     }
 
@@ -47,17 +50,18 @@ public class AI {
      * @return max value
      */
     public int maxValue(CheckerBoard board, int alpha, int beta, int depth) {
-        if (depth == 0) {
+        if (depth == 0)
             return board.heuristic();
-        }
+
+        CheckerBoard cloneBoard = new CheckerBoard(board.getBoardStates(), board.getCheckerList());
 
         int value = Integer.MIN_VALUE;
-        for (CheckerBoard neighbour : board.generateNeighbours()) {
+        for (CheckerBoard neighbour : cloneBoard.generateNeighbours(true)) {
             value = Math.max(value, minValue(neighbour, alpha, beta, depth - 1));
             if (value >= beta) return value;
             alpha = Math.max(alpha, value);
         }
-
+//        System.out.println("Max board: \n" + board + ", heuristic: " + board.heuristic() + ", depth: " + depth + "\n");
         return value;
     }
 
@@ -71,9 +75,7 @@ public class AI {
         CheckerBoard result = null;
         int bestValue = Integer.MIN_VALUE;
 
-        System.out.println("neighbours size: " + board.generateNeighbours().size());
-        for (CheckerBoard neighbour : board.generateNeighbours()) {
-            System.out.print(neighbour + ":" + neighbour.heuristic() + "\n");
+        for (CheckerBoard neighbour : board.generateNeighbours(true)) {
             int value = maxValue(neighbour, Integer.MIN_VALUE, Integer.MAX_VALUE, depth);
 
             if (value > bestValue) {
@@ -81,7 +83,7 @@ public class AI {
                 result = neighbour;
             }
         }
-        System.out.println(result + ", heuristic: " + result.heuristic());
+
         return result;
     }
 
@@ -96,5 +98,12 @@ public class AI {
         return alphaBetaSearch(currentBoard, gameDifficult.getDepth());
     }
 
+
+    public static void main(String[] args) {
+        CheckerBoard checkerBoard = new CheckerBoard();
+        AI ai = AI.getInstance();
+
+        System.out.println(ai.maxValue(checkerBoard, Integer.MIN_VALUE, Integer.MAX_VALUE, 2));
+    }
 
 }

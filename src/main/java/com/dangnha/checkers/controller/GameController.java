@@ -83,7 +83,6 @@ public class GameController {
                 }
             }
         };
-
         gameLoop.start();
 
     }
@@ -123,7 +122,7 @@ public class GameController {
      */
     public void stopGame(AnimationTimer gameLoop) {
         gameLoop.stop();
-        this.initGame();
+        this.resetGame();
     }
 
     /**
