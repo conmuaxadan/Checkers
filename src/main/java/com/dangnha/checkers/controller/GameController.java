@@ -18,6 +18,7 @@ public class GameController {
     private static GameController instance;
     private boolean isBlackTurn;
     private final AI ai;
+    private AnimationTimer gameLoop;
 
     private GameController() {
         this.checkerBoardController = CheckerBoardController.getInstance();
@@ -40,7 +41,7 @@ public class GameController {
         isPlaying = true;
 
         PauseTransition pause = new PauseTransition();
-        AnimationTimer gameLoop = new AnimationTimer() {
+        gameLoop = new AnimationTimer() {
 //            boolean isBlackTurn = true;
 
             @Override
@@ -51,8 +52,11 @@ public class GameController {
                             // delay AI 1s to make view display when user (WHITE team) places checker
                             pause.setDuration(Duration.seconds(1));
                             pause.setOnFinished(event -> {
+                                long begin = System.currentTimeMillis();
                                 CheckerBoard bestMove = ai.getBestMove(checkerBoardController.getCheckerBoard(), gameDifficult);
                                 checkerBoardController.setCheckerBoard(bestMove);
+                                long end = System.currentTimeMillis();
+                                System.out.println("Computed time: " + (end - begin) + "ms");
                                 isBlackTurn = false;
                             });
                             pause.play();
@@ -117,6 +121,7 @@ public class GameController {
 
     /**
      * Stop game if game over for each team
+     *
      * @param gameLoop is the loop util the game finished (black or white lose)
      */
     public void stopGame(AnimationTimer gameLoop) {
@@ -131,6 +136,8 @@ public class GameController {
         initGame();
         isPlayWithAI = true;
         isPlaying = false;
+        gameDifficult = GameDifficult.EASY;
+        gameLoop.stop();
     }
 
     public boolean isBlackTurn() {

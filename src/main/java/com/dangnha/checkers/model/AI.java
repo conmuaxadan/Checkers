@@ -98,7 +98,6 @@ public class AI {
         return alphaBetaSearch(currentBoard, gameDifficult.getDepth());
     }
 
-
     public static void main(String[] args) {
         CheckerBoard checkerBoard = new CheckerBoard();
         AI ai = AI.getInstance();
