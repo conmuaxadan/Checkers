@@ -53,9 +53,16 @@ public class GameController {
                             pause.setDuration(Duration.seconds(1));
                             pause.setOnFinished(event -> {
                                 long begin = System.currentTimeMillis();
+                                long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+
                                 CheckerBoard bestMove = ai.getBestMove(checkerBoardController.getCheckerBoard(), gameDifficult);
                                 checkerBoardController.setCheckerBoard(bestMove);
+
                                 long end = System.currentTimeMillis();
+                                long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+
+                                System.out.println("Depth: " + gameDifficult.getDepth());
+                                System.out.println("Memory used: " + (endMemory - startMemory) + " bytes ~ "  + (endMemory - startMemory) / 1024 + " KB");
                                 System.out.println("Computed time: " + (end - begin) + "ms");
                                 isBlackTurn = false;
                             });

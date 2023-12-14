@@ -36,7 +36,6 @@ public class AI {
             if (alpha >= value) return value;
             beta = Math.min(beta, value);
         }
-//        System.out.println("min board: \n" + board + ", heuristic: " + board.heuristic() + ", depth: " + depth + "\n");
         return value;
     }
 
@@ -61,7 +60,6 @@ public class AI {
             if (value >= beta) return value;
             alpha = Math.max(alpha, value);
         }
-//        System.out.println("Max board: \n" + board + ", heuristic: " + board.heuristic() + ", depth: " + depth + "\n");
         return value;
     }
 
