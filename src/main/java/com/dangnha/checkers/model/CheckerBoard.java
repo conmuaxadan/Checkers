@@ -6,7 +6,6 @@ import com.dangnha.checkers.constants.GameState;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 public class CheckerBoard {
@@ -35,7 +34,7 @@ public class CheckerBoard {
             }
             refreshBoard();
         } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+            e.printStackTrace(System.out);
         }
     }
 
@@ -233,10 +232,10 @@ public class CheckerBoard {
 
         // count normal pieces and king pieces (checkers) for each team
         // if you want to increase priority attack of checkers, you should increase point of it
-        int blackPieces = (int) checkerList.stream().filter(checker -> checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_BLACK)).count();
+        int blackPieces = (int) checkerList.stream().filter(checker -> checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_BLACK)).count();
         int blackKings = (int) checkerList.stream().filter(checker -> checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_KING_BLACK)).count();
 
-        int whitePieces = (int) checkerList.stream().filter(checker -> checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_WHITE)).count();
+        int whitePieces = (int) checkerList.stream().filter(checker -> checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_WHITE)).count();
         int whiteKings = (int) checkerList.stream().filter(checker -> checker.getCheckerType().equals(CheckerConstant.CHESS_TYPE_KING_WHITE)).count();
 
         int countAttackPosWhite = 0;
@@ -272,15 +271,35 @@ public class CheckerBoard {
             }
         }
 
-        // if black have at least one king and white has smaller kings than black then priority attack
-        if (blackKings >= 1 && whiteKings <= blackKings) {
-            result = 10 * (blackPieces - whitePieces) + 3 * (blackKings - whiteKings) + 4 * (countAttackPosBlack - countAttackPosWhite)
-                    + 2 * (countBlackCheckersNearKingY - countWhiteCheckersNearKingY);
-        } else {
-            result = 8 * (blackPieces - whitePieces) + 5 * (blackKings - whiteKings) + 4 * (countAttackPosBlack - countAttackPosWhite)
-                    + 3 * (countBlackCheckersNearKingY - countWhiteCheckersNearKingY);
-        }
+        int numberWhitePiecesInBlackBoard = countOpponentCheckersInMyBoard(true);
+        int numberBlackPiecesInWhiteBoard = countOpponentCheckersInMyBoard(false);
 
+        result = 10 * (numberBlackPiecesInWhiteBoard - numberWhitePiecesInBlackBoard) + 12 * (blackPieces - whitePieces) + 8 * (countAttackPosBlack - countAttackPosWhite) + 6 * (blackKings - whiteKings) + 4 * (countBlackCheckersNearKingY - countWhiteCheckersNearKingY);
+
+        return result;
+    }
+
+    /**
+     * Get number of opponent checkers in my board. Ex: if I am black team, I will count white checkers in my board
+     *
+     * @param isBlackTeamBoard is black team board or not
+     * @return number of opponent checkers in my board
+     */
+    private int countOpponentCheckersInMyBoard(boolean isBlackTeamBoard) {
+        int result = 0;
+        if (isBlackTeamBoard) {
+            for (Checker checker : checkerList) {
+                if (checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_WHITE)) {
+                    if (checker.getPosition().getY() <= BoardConstant.N / 2) result++;
+                }
+            }
+        } else {
+            for (Checker checker : checkerList) {
+                if (checker.getCheckerType().endsWith(CheckerConstant.CHESS_TYPE_BLACK)) {
+                    if (checker.getPosition().getY() >= BoardConstant.N / 2) result++;
+                }
+            }
+        }
         return result;
     }
 
@@ -368,6 +387,8 @@ public class CheckerBoard {
 
         AI ai = AI.getInstance();
 //        System.out.println(ai.minimax(14, true, board));
+
+        System.out.println(board.countOpponentCheckersInMyBoard(false));
     }
 
 }

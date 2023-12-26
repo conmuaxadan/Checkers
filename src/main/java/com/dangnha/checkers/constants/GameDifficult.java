@@ -3,7 +3,7 @@ package com.dangnha.checkers.constants;
 public enum GameDifficult {
     HARD(7),
     MEDIUM(5),
-    EASY(7);
+    EASY(3);
 
     private int depth;
     private GameDifficult(int depth){
